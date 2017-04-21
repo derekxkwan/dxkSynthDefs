@@ -1,6 +1,6 @@
 SynthDef(\dxkLooperMono, {|recplay = 0, buf, writelevel = 1, overwrite = 0, ramp = 0.003, inBus =0, outBus = 0, amp = 1|
 	//recplay: 0 = none, 1 = record, 2 = play
-	var input, output, recording, rectrig, recofftrig, playing, playtrig, recenv, playenv, recdelayed, playdelayed, looplen, readpos;
+	var input, output, recording, rectrig, recofftrig, playing, playtrig, recenv, playenv, recdelayed, playdelayed, looplen, readenv, readpos, readtrig;
 	
 	input = In.ar(inBus, 1);
 	recording = BinaryOpUGen('==', recplay, 1);
@@ -8,7 +8,7 @@ SynthDef(\dxkLooperMono, {|recplay = 0, buf, writelevel = 1, overwrite = 0, ramp
 	recofftrig = Trig.kr(0.5 - recording);
 	recenv = EnvGen.ar(Env.asr(ramp, 1, ramp), recording);
 	//delay off recording by ramp time to allow ramp
-	recording = Select.kr(recording, [DelayN.kr(recording, ramp, ramp), recording]);
+	//recording = Select.kr(recording, [DelayN.kr(recording, ramp, ramp), recording]);
 	RecordBuf.ar(input*recenv, buf, 0, writelevel, overwrite, recording, 1, rectrig);
 	
 	//record loop length
@@ -21,7 +21,11 @@ SynthDef(\dxkLooperMono, {|recplay = 0, buf, writelevel = 1, overwrite = 0, ramp
 	playing = Select.kr(playing, [DelayN.kr(playing, ramp, ramp), playing]);
 	readpos = Phasor.ar(playtrig, BufRateScale.kr(buf), 0, looplen * SampleRate.ir);
 	
+	//looping envelope
+	readtrig = Trig.ar(BinaryOpUGen('>', readpos, 0), looplen - ramp);
+	readenv = EnvGen.ar(Env.asr(ramp, 1, ramp), readtrig); 
+	
 	output = BufRd.ar(1, buf, readpos, 1);
-	output = output * playenv;
+	output = output * playenv * readenv;
 	Out.ar(outBus, output);
 }).add;
