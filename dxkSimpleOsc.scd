@@ -4,7 +4,7 @@ SynthDef(\dxkPulseASR, {|out = 0, freq = 440, amp = 1, pan = 0, width = 0.5,att 
 	env = EnvGen.ar(Env.asr(att,1,rel),gate, doneAction: 2);
 	sig = Pulse.ar(freq, width, amp);
 	sig = Pan2.ar(sig, pan);
-	Sig.ar(out,sig)
+	Out.ar(out,sig)
 	}).add;
 
 
@@ -13,7 +13,7 @@ SynthDef(\dxkPulseADSR, {|out = 0, freq = 440, amp = 1, pan = 0, width = 0.5,att
 	env = EnvGen.ar(Env.adsr(att,decay,suslvl,rel),gate, doneAction: 2);
 	sig = Pulse.ar(freq, width, amp);
 	sig = Pan2.ar(sig, pan);
-	Sig.ar(out,sig)
+	Out.ar(out,sig)
 	}).add;
 
 
@@ -22,7 +22,7 @@ SynthDef(\dxkPulsePerc, {|out = 0, freq = 440, amp = 1, pan = 0, width = 0.5,att
 	env = EnvGen.ar(Env.perc(att,rel, 1, curve),gate, doneAction: 2);
 	sig = Pulse.ar(freq, width, amp);
 	sig = Pan2.ar(sig, pan);
-	Sig.ar(out,sig)
+	Out.ar(out,sig)
 	}).add;
 
 SynthDef(\dxkSinASR, {|out = 0, freq = 440, amp = 1, pan = 0, att = 0.001,rel = 1, gate = 1|
@@ -30,7 +30,7 @@ SynthDef(\dxkSinASR, {|out = 0, freq = 440, amp = 1, pan = 0, att = 0.001,rel = 
 	env = EnvGen.ar(Env.asr(att,1,rel),gate, doneAction: 2);
 	sig = SinOsc.ar(freq, 0, amp);
 	sig = Pan2.ar(sig, pan);
-	Sig.ar(out,sig)
+	Out.ar(out,sig)
 	}).add;
 
 
@@ -39,7 +39,7 @@ SynthDef(\dxkSinADSR, {|out = 0, freq = 440, amp = 1, pan = 0, att = 0.001, deca
 	env = EnvGen.ar(Env.adsr(att,decay,suslvl,rel),gate, doneAction: 2);
 	sig = SinOsc.ar(freq, 0, amp);
 	sig = Pan2.ar(sig, pan);
-	Sig.ar(out,sig)
+	Out.ar(out,sig)
 	}).add;
 
 
@@ -49,7 +49,7 @@ SynthDef(\dxkSinPerc, {|out = 0, freq = 440, amp = 1, pan = 0, att = 0.001,rel =
 	env = EnvGen.ar(Env.perc(att,rel, 1, curve),gate, doneAction: 2);
 	sig = SinOsc.ar(freq, 0, amp);
 	sig = Pan2.ar(sig, pan);
-	Sig.ar(out,sig)
+	Out.ar(out,sig)
 	}).add;
 
 
@@ -59,7 +59,7 @@ SynthDef(\dxkVarSawASR, {|out = 0, freq = 440, amp = 1, pan = 0, width = 0.5,att
 	env = EnvGen.ar(Env.asr(att,1,rel),gate, doneAction: 2);
 	sig = VarSaw.ar(freq, 0, width, amp);
 	sig = Pan2.ar(sig, pan);
-	Sig.ar(out,sig)
+	Out.ar(out,sig)
 	}).add;
 
 
@@ -68,7 +68,7 @@ SynthDef(\dxkVarSawADSR, {|out = 0, freq = 440, amp = 1, pan = 0, width = 0.5, a
 	env = EnvGen.ar(Env.adsr(att,decay,suslvl,rel),gate, doneAction: 2);
 	sig = VarSaw.ar(freq, 0, width, amp);
 	sig = Pan2.ar(sig, pan);
-	Sig.ar(out,sig)
+	Out.ar(out,sig)
 	}).add;
 
 
@@ -77,7 +77,7 @@ SynthDef(\dxkVarSawPerc, {|out = 0, freq = 440, amp = 1, pan = 0, width = 0.5,at
 	env = EnvGen.ar(Env.perc(att,rel, 1, curve),gate, doneAction: 2);
 	sig = VarSaw.ar(freq, 0,width, amp);
 	sig = Pan2.ar(sig, pan);
-	Sig.ar(out,sig)
+	Out.ar(out,sig)
 	}).add;
 
 
@@ -86,7 +86,7 @@ SynthDef(\dxkSawASR, {|out = 0, freq = 440, amp = 1, pan = 0, att = 0.001,rel = 
 	env = EnvGen.ar(Env.asr(att,1,rel),gate, doneAction: 2);
 	sig = Saw.ar(freq, amp);
 	sig = Pan2.ar(sig, pan);
-	Sig.ar(out,sig)
+	Out.ar(out,sig)
 	}).add;
 
 
@@ -95,7 +95,7 @@ SynthDef(\dxkSawADSR, {|out = 0, freq = 440, amp = 1, pan = 0, att = 0.001, deca
 	env = EnvGen.ar(Env.adsr(att,decay,suslvl,rel),gate, doneAction: 2);
 	sig = Saw.ar(freq, amp);
 	sig = Pan2.ar(sig, pan);
-	Sig.ar(out,sig)
+	Out.ar(out,sig)
 	}).add;
 
 
@@ -105,7 +105,7 @@ SynthDef(\dxkSawPerc, {|out = 0, freq = 440, amp = 1, pan = 0, att = 0.001,rel =
 	env = EnvGen.ar(Env.perc(att,rel, 1, curve),gate, doneAction: 2);
 	sig = Saw.ar(freq, amp);
 	sig = Pan2.ar(sig, pan);
-	Sig.ar(out,sig)
+	Out.ar(out,sig)
 	}).add;
 
 
@@ -115,7 +115,7 @@ SynthDef(\dxkSin2ASR, {|out = 0, freq = 440, detune = 0.01, amp = 1, pan = 0, at
 	sig = SinOsc.ar([freq,freq*(1+detune)], 0, amp);
 	sig = Mix.new(sig);
 	sig = Pan2.ar(sig, pan);
-	Sig.ar(out,sig)
+	Out.ar(out,sig)
 	}).add;
 
 
@@ -125,7 +125,7 @@ SynthDef(\dxkSin2ADSR, {|out = 0, freq = 440, detune = 0.01, amp = 1, pan = 0, a
 	sig = SinOsc.ar([freq,freq*(1+detune)], 0, amp);
 	sig = Mix.new(sig);
 	sig = Pan2.ar(sig, pan);
-	Sig.ar(out,sig)
+	Out.ar(out,sig)
 	}).add;
 
 
@@ -136,6 +136,6 @@ SynthDef(\dxkSin2Perc, {|out = 0, freq = 440, detune = 0.01, amp = 1, pan = 0, a
 	sig = SinOsc.ar([freq,freq*(1+detune)], 0, amp);
 	sig = Mix.new(sig);
 	sig = Pan2.ar(sig, pan);
-	Sig.ar(out,sig)
+	Out.ar(out,sig)
 	}).add;
 
