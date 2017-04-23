@@ -4,7 +4,7 @@ SynthDef(\dxkPulseASR, {|out = 0, freq = 440, amp = 1, pan = 0, width = 0.5,att 
 	env = EnvGen.ar(Env.asr(att,1,rel),gate, doneAction: 2);
 	sig = Pulse.ar(freq, width, amp);
 	sig = Pan2.ar(sig, pan);
-	Out.ar(out,sig)
+	Out.ar(out,sig*env);
 	}).add;
 
 
