@@ -5,3 +5,4 @@ some synth defs for SuperCollider
 - dxkLoopers - loopers
 - dxkSimpleDelay - wrappers around Delay UGens
 - dxkSimpleOsc - wrappers around oscillator UGens
+- dxkSynthsMisc - various synthesizers (such as DTMF)
