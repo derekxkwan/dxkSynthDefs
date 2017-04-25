@@ -1,9 +1,9 @@
 
-SynthDef(\dxkBd1, {|t_trig, freq = 45, len=0.3, att = 0.002, fgprop =0.3, fgdprop = 0.9, noisiness=0.0002, lop = 1250, amp = 1, pan = 0, out = 0|
+SynthDef(\dxkBd1, {|t_trig = 1, freq = 45, len=0.3, att = 0.002, fgprop =0.3, fgdprop = 0.9, noisiness=0.0002, lop = 1250, amp = 1, pan = 0, out = 0|
 
 	//fgprop = frequency glide in proportion to freq
 	//fgdprop = freq glide duration in proportion to dur
-	//freqbase = fundamental
+	//freq = fundamental
 	var freqenv, noise, main, fgdur, fgact, env;
 	fgdur = Clip.ir(len * fgdprop, 0, len); //real value of fgdprop
 	fgact = fgprop*freq; //actual hz to glide over
@@ -17,7 +17,16 @@ SynthDef(\dxkBd1, {|t_trig, freq = 45, len=0.3, att = 0.002, fgprop =0.3, fgdpro
 	Out.ar(out, main);
 }).add;
 
-SynthDef(\dxkHh1, {|t_trig, len = 0.125, att = 0.001, rq = 0.35, lp = 10000, bplow = 5000, bphigh = 8000, amp = 1, pan = 0, out = 0|
+SynthDef(\dxkBd2, {|t_trig = 1, freq = 70, rq = 0.1, samplen = 64, amp = 1, pan = 0, out = 0|
+	var output,makeupgain = 3.5;
+	output = Trig.ar(t_trig,samplen/SampleRate.ir);
+	output = BPF.ar(output,freq,rq,amp*makeupgain);
+	DetectSilence.ar(output, doneAction:2);
+	output = Pan2.ar(output, pan);
+	Out.ar(out, output);
+}).add;
+
+SynthDef(\dxkHh1, {|t_trig = 1, len = 0.125, att = 0.001, rq = 0.35, lp = 10000, bplow = 5000, bphigh = 8000, amp = 1, pan = 0, out = 0|
 	var bpenv, main, env,glide;
 	env = EnvGen.ar(Env.perc(att, len, 1 -8), doneAction:2);
 	glide = (bphigh-bplow).abs;
@@ -31,18 +40,32 @@ SynthDef(\dxkHh1, {|t_trig, len = 0.125, att = 0.001, rq = 0.35, lp = 10000, bpl
 	Out.ar(out, main);
 }).add;
 
-SynthDef(\dxkBd2, {|freq=60, len = 0.0015, rq = 0.1,t_trig = 1, amp = 1, out = 0, pan = 0|
-	var main, makeupgain = 3.5;
-	main = Trig.ar(t_trig, len);
-	main = BPF.ar(main, freq, rq, amp*makeupgain);
-	DetectSilence.ar(main, doneAction:2);
-	main = Pan2.ar(main, pan);
-	Out.ar(out, main);
-}).add;
 
+SynthDef(\dxkSd1, {|t_trig = 1, freq = 300, len = 0.125, fgprop = 0.5, fgdprop = 0.75, rq = 0.1, lop = 5000, att = 0.002, amp = 1, pan = 0, out = 0|
+	//penv = pitch envelope
+	//fgprop = frequency glide in proportion to freq
+	//fgdprop = freq glide duration in proportion to dur
+	//freqbase = fundamental
+	var output, ampenv, penv, gaincomp = 9;
+	output = WhiteNoise.ar()*gaincomp;
+	penv = EnvGen.ar(Env.perc(att, len*fgdprop, freq*fgprop), t_trig);
+	penv = penv + freq;
+	output = BPF.ar(output,penv, rq);
+	output = LPF.ar(output, lop, amp);
+	ampenv = EnvGen.ar(Env.perc(att, len), t_trig, doneAction: 2);
+	output = output * ampenv;
+	output = Pan2.ar(output, pan);
+	Out.ar(out, output);
+}).add;
+	
+	
+	
+	
+
+	
 //adapted from the ryan brown synthdef \cymbal808_ryan from the supercollider-quarks
 //synthdefpool
-SynthDef(\dxkCymb808_1, {|t_trig, freq = 205.35, len = 0.25, sustain = 0.5, att = 0.001, out = 0, pan = 0, amp = 1|
+SynthDef(\dxkCymb808_1, {|t_trig = 1, freq = 205.35, len = 0.25, sustain = 0.5, att = 0.001, out = 0, pan = 0, amp = 1|
 	var freqArray, sig1, sig2,env, sig1env, output;
 	freqArray = freq * [ 1, 1.4823959094229, 1.800048697346, 2.545458972486, 2.6322863403944, 3.9552471390309 ];
 	sig2 = Pulse.ar(freqArray, 0.55, 0.9);
