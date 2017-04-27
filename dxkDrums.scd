@@ -26,7 +26,21 @@ SynthDef(\dxkBd2, {|t_trig = 1, freq = 70, rq = 0.1, samplen = 64, amp = 1, pan 
 	Out.ar(out, output);
 }).add;
 
-SynthDef(\dxkHh1, {|t_trig = 1, len = 0.125, att = 0.001, rq = 0.35, lp = 10000, bplow = 5000, bphigh = 8000, amp = 1, pan = 0, out = 0|
+//adapted from joe sullivan's synthesizing hihats http://joesul.li/van/synthesizing-hi-hats/
+SynthDef(\dxkHh1, {|t_trig = 1, freq = 40,  att = 0.001, len = 0.1, rq = 0.1, hpfreq = 7000, lopfreq = 10000, out = 0, pan = 0, amp = 1|
+	var freqarr, output, env;
+	freqarr = freq * [2,3,4.16, 5.43, 6.79,8.21];
+	output = Mix.ar(Pulse.ar(freqarr, mul:1/freqarr.size));
+	output = BPF.ar(output, 10000, rq);
+	output = RHPF.ar(output, 7000, rq);
+	env = EnvGen.ar(Env.perc(att, len, amp), t_trig, doneAction: 2);
+	output = output *env;
+	output = Pan2.ar(output, pan);
+	Out.ar(out, output);
+}).add;
+)
+
+SynthDef(\dxkHh2, {|t_trig = 1, len = 0.125, att = 0.001, rq = 0.35, lp = 10000, bplow = 5000, bphigh = 8000, amp = 1, pan = 0, out = 0|
 	var bpenv, main, env,glide;
 	env = EnvGen.ar(Env.perc(att, len, 1 -8), doneAction:2);
 	glide = (bphigh-bplow).abs;
