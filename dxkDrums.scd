@@ -38,7 +38,7 @@ SynthDef(\dxkHh1, {|t_trig = 1, freq = 40,  att = 0.001, len = 0.1, rq = 0.1, hp
 	output = Pan2.ar(output, pan);
 	Out.ar(out, output);
 }).add;
-)
+
 
 SynthDef(\dxkHh2, {|t_trig = 1, len = 0.125, att = 0.001, rq = 0.35, lp = 10000, bplow = 5000, bphigh = 8000, amp = 1, pan = 0, out = 0|
 	var bpenv, main, env,glide;
@@ -71,12 +71,64 @@ SynthDef(\dxkSd1, {|t_trig = 1, freq = 300, len = 0.125, fgprop = 0.5, fgdprop =
 	output = Pan2.ar(output, pan);
 	Out.ar(out, output);
 }).add;
-	
-	
-	
-	
 
+//adapted+modified from snare1.pd pure data patch by user ichabod of pdpatchrepo
+SynthDef(\dxkSd2, {|t_trig = 1, freq = 180, freq1amp = 0.75, freq2amp = 1, lopfreq = 1000, hipfreq = 950, lopamp = 0.5, hipamp = 1, att = 0.001, len = 0.1, amp = 1, pan = 0, out = 0|
+	var oscs, oenv1, oenv2, noise, lonoise, loenv, hinoise, hienv, output;
+	oscs = SinOsc.ar([freq, freq*1.83], 0, [0.75, 1]);
+	oenv1 = EnvGen.ar(Env.perc(att, len*0.53), t_trig);
+	oenv2 = EnvGen.ar(Env.perc(att, len), t_trig, doneAction: 2);
+	oscs = Mix.new(oscs * [oenv1, oenv2]);
+	noise = WhiteNoise.ar();
+	lonoise = LPF.ar(noise, lopfreq);
+	loenv = EnvGen.ar(Env.perc(att, len*0.6, lopamp), t_trig);
+	lonoise = lonoise * loenv;
+	hinoise = HPF.ar(noise, hipfreq);
+	hienv = EnvGen.ar(Env.perc(att, len*0.46,hipamp), t_trig);
+	hinoise = hinoise*hienv;
+	output = oscs + lonoise + hinoise;
+	output = Pan2.ar(output, pan)*amp;
+	Out.ar(out, output);
+}).add;
 	
+//adapted+modified from snare2.pd pure data patch by user ichabod of pdpatchrepo
+SynthDef(\dxkSd3, {|t_trig = 1, freq = 150, att = 0.001, len = 0.3, lopfreq = 1200, rq = 0.3, tone = 0.7, snare = 0.5, amp = 1, pan = 0, out = 0|
+	var freqs, rqs, bpmuls, fenv, drumhead, snares, noise, nmul, lonoise, hinoise, output, nenv, rand,  lofreq, hifreq, loenv, hienv, lomul;
+
+	//random number
+	rand = TIRand.kr(0,101, t_trig);
+	
+	freqs = freq * [1, 2.03, 3.26, 4.6];
+	rqs = rq * [1/2, 1, 1/2, 1/2];
+	bpmuls = 3 * [8.333, 10, 5, 1];
+	fenv = EnvGen.ar(Env.perc(att, len), t_trig, doneAction: 2);
+	noise = WhiteNoise.ar(1.4)+1.4;
+	noise = Select.ar(noise, [DC.ar(-1), DC.ar(0), DC.ar(1)]);
+	nmul = rand/800.0 + 0.875;
+	nenv = EnvGen.ar(Env.perc(att, len*0.46, nmul), t_trig);
+	noise = noise * nenv;
+	
+	//drum head formants
+	drumhead = Resonz.ar(LPF.ar(noise, lopfreq), freqs, rqs, bpmuls);
+	drumhead = drumhead * tone;
+
+	//snares
+	lofreq = rand + 900;
+	hifreq = lofreq* 0.95;
+	lonoise = LPF.ar(noise, lofreq);
+	lomul = (rand/500.0) + 0.4;
+	loenv = EnvGen.ar(Env.perc(att, len*0.66,lomul), t_trig);
+	lonoise = lonoise * loenv;
+	hinoise = HPF.ar(noise, hifreq);
+	hienv = EnvGen.ar(Env.perc(att, len*0.466), t_trig);
+	hinoise = hinoise * hienv;
+	snares = lonoise + hinoise;
+	snares = snares * snare;
+	output = drumhead + snares;
+	output = Pan2.ar(output, pan);
+	Out.ar(out, output);
+}).add;
+
 //adapted from the ryan brown synthdef \cymbal808_ryan from the supercollider-quarks
 //synthdefpool
 SynthDef(\dxkCymb808_1, {|t_trig = 1, freq = 205.35, len = 0.25, sustain = 0.5, att = 0.001, out = 0, pan = 0, amp = 1|
