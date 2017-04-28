@@ -1,5 +1,5 @@
 
-SynthDef(\dxkBd1, {|t_trig = 1, freq = 45, len=0.3, att = 0.002, fgprop =0.3, fgdprop = 0.9, noisiness=0.0002, lop = 1250, amp = 1, pan = 0, out = 0|
+SynthDef(\dxkBd1, {|t_trig = 1, freq = 45, overdrive = 2, len=0.5, att = 0.002, fgprop =0.3, fgdprop = 0.9, noisiness=0.2, lop = 1250, amp = 1, pan = 0, out = 0|
 
 	//fgprop = frequency glide in proportion to freq
 	//fgdprop = freq glide duration in proportion to dur
@@ -7,20 +7,22 @@ SynthDef(\dxkBd1, {|t_trig = 1, freq = 45, len=0.3, att = 0.002, fgprop =0.3, fg
 	var freqenv, noise, main, fgdur, fgact, env;
 	fgdur = Clip.ir(len * fgdprop, 0, len); //real value of fgdprop
 	fgact = fgprop*freq; //actual hz to glide over
-	freqenv = EnvGen.ar(Env.perc(att, fgdur, fgact, -4));
+	freqenv = EnvGen.ar(Env.perc(att, fgdur, fgact, -4),t_trig);
 	freqenv = (freqenv + freq) + PinkNoise.ar(noisiness);
 	main = SinOsc.ar(freqenv);
 	main = LPF.ar(main, lop);
-	env = EnvGen.ar(Env.perc(att, len, amp, -4), doneAction: 2);
+	env = EnvGen.ar(Env.perc(att, len, amp, -4), t_trig, doneAction: 2);
 	main = main * env;
+	main = (main * overdrive).tanh;
 	main = Pan2.ar(main, pan);
 	Out.ar(out, main);
 }).add;
 
-SynthDef(\dxkBd2, {|t_trig = 1, freq = 70, rq = 0.1, samplen = 64, amp = 1, pan = 0, out = 0|
+SynthDef(\dxkBd2, {|t_trig = 1, freq = 55, rq = 0.1, overdrive = 2, samplen = 100, amp = 1, pan = 0, out = 0|
 	var output,makeupgain = 3.5;
 	output = Trig.ar(t_trig,samplen/SampleRate.ir);
 	output = BPF.ar(output,freq,rq,amp*makeupgain);
+	output = (output * overdrive).tanh;
 	DetectSilence.ar(output, doneAction:2);
 	output = Pan2.ar(output, pan);
 	Out.ar(out, output);
