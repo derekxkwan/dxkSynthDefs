@@ -6,6 +6,7 @@ some synth defs for SuperCollider
 - dxkModal - modal synthesis
 - dxkSimpleDelay - wrappers around Delay UGens
 - dxkSimpleOsc - wrappers around oscillator UGens
+- dxkSimpleVerb - wrappers around reverb UGens
 - dxkSynthsMisc - various synthesizers (such as DTMF)
 
 NOT MINE (mostly for archival/collection purposes)
