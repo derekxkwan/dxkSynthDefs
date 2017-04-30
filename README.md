@@ -2,6 +2,7 @@
 some synth defs for SuperCollider
 
 - dxkDrums - a collection of percussion synthdefs
+- dxkFx - processing synthdefs
 - dxkLoopers - loopers
 - dxkModal - modal synthesis
 - dxkSimpleDelay - wrappers around Delay UGens
