@@ -17,10 +17,20 @@ SynthDef(\dxkDtmf, {|number = 0, mul = 1, pan = 0, out = 0, gate = 1, att = 0.00
 	output = Pan2.ar(output, pan);
 	Out.ar(out, output)}).add;
 
-SynthDef(\dxkClick, {|t_trig = 1, samplen = 1, amp = 1, pan = 0, out = 0|
-	var output;
+SynthDef(\dxkClik, {|t_trig = 1, samplen = 1,  amp = 1, pan = 0, out = 0|
+	var output, filtput;
 	output = Trig.ar(t_trig, samplen*SampleDur.ir);
 	output = output * amp;
+	DetectSilence.ar(output, doneAction: 2);
+	output = Pan2.ar(output, pan);
+	Out.ar(out, output);
+}).add;
+
+SynthDef(\dxkClikFilt, {|t_trig = 1, samplen = 1, freq = 440, rq = 0.1, amp = 1, pan = 0, out = 0|
+	var output, filtput;
+	output = Trig.ar(t_trig, samplen*SampleDur.ir);
+	output = output * amp;
+	output = BPF.ar(output, freq, rq);
 	DetectSilence.ar(output, doneAction: 2);
 	output = Pan2.ar(output, pan);
 	Out.ar(out, output);
