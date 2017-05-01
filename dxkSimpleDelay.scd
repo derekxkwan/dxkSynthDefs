@@ -1,5 +1,5 @@
 
-SynthDef(\dxkCombNMono, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, decaytime = 1, in = 50, out = 0, amp = 1|
+SynthDef(\dxkCombNM, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, decaytime = 1, in = 50, out = 0, amp = 1|
 	var input, wetsig, outsig;
 	input = In.ar(in,1);
 	wetsig = CombL.ar(input, maxdelay, delaytime, decaytime, 1);
@@ -8,7 +8,7 @@ SynthDef(\dxkCombNMono, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, de
 	Out.ar(out, outsig);
 }, [0.5, 0.5, 0.5]).add;
 
-SynthDef(\dxkCombLMono, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, decaytime = 1, in = 50, out = 0, amp = 1|
+SynthDef(\dxkCombLM, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, decaytime = 1, in = 50, out = 0, amp = 1|
 	var input, wetsig, outsig;
 	input = In.ar(in,1);
 	wetsig = CombN.ar(input, maxdelay, delaytime, decaytime, 1);
@@ -17,7 +17,7 @@ SynthDef(\dxkCombLMono, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, de
 	Out.ar(out, outsig);
 }, [0.5, 0.5, 0.5]).add;
 
-SynthDef(\dxkCombCMono, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, decaytime = 1, in = 50, out = 0, amp = 1|
+SynthDef(\dxkCombCM, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, decaytime = 1, in = 50, out = 0, amp = 1|
 	var input, wetsig, outsig;
 	input = In.ar(in,1);
 	wetsig = CombC.ar(input, maxdelay, delaytime, decaytime, 1);
@@ -27,7 +27,7 @@ SynthDef(\dxkCombCMono, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, de
 }, [0.5, 0.5, 0.5]).add;
 
 
-SynthDef(\dxkCombNStereo, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, decaytime = 1, in = 50, out = 0, amp = 1|
+SynthDef(\dxkCombNS, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, decaytime = 1, in = 50, out = 0, amp = 1|
 	var input, wetsig, outsig;
 	input = In.ar(in,2);
 	wetsig = CombL.ar(input, maxdelay, delaytime, decaytime, 1);
@@ -36,7 +36,7 @@ SynthDef(\dxkCombNStereo, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, 
 	Out.ar(out, outsig);
 }, [0.5, 0.5, 0.5]).add;
 
-SynthDef(\dxkCombLStereo, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, decaytime = 1, in = 50, out = 0, amp = 1|
+SynthDef(\dxkCombLS, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, decaytime = 1, in = 50, out = 0, amp = 1|
 	var input, wetsig, outsig;
 	input = In.ar(in,2);
 	wetsig = CombN.ar(input, maxdelay, delaytime, decaytime, 1);
@@ -45,7 +45,7 @@ SynthDef(\dxkCombLStereo, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, 
 	Out.ar(out, outsig);
 }, [0.5, 0.5, 0.5]).add;
 
-SynthDef(\dxkCombCStereo, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, decaytime = 1, in = 50, out = 0, amp = 1|
+SynthDef(\dxkCombCS, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, decaytime = 1, in = 50, out = 0, amp = 1|
 	var input, wetsig, outsig;
 	input = In.ar(in,2);
 	wetsig = CombC.ar(input, maxdelay, delaytime, decaytime, 1);
@@ -54,7 +54,7 @@ SynthDef(\dxkCombCStereo, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, 
 	Out.ar(out, outsig);
 }, [0.5, 0.5, 0.5]).add;
 
-SynthDef(\dxkAllpassNMono, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, decaytime = 1, in = 50, out = 0, amp = 1|
+SynthDef(\dxkAllpassNM, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, decaytime = 1, in = 50, out = 0, amp = 1|
 	var input, wetsig, outsig;
 	input = In.ar(in,1);
 	wetsig = AllpassL.ar(input, maxdelay, delaytime, decaytime, 1);
@@ -63,7 +63,7 @@ SynthDef(\dxkAllpassNMono, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1,
 	Out.ar(out, outsig);
 }, [0.5, 0.5, 0.5]).add;
 
-SynthDef(\dxkAllpassLMono, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, decaytime = 1, in = 50, out = 0, amp = 1|
+SynthDef(\dxkAllpassLM, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, decaytime = 1, in = 50, out = 0, amp = 1|
 	var input, wetsig, outsig;
 	input = In.ar(in,1);
 	wetsig = AllpassN.ar(input, maxdelay, delaytime, decaytime, 1);
@@ -72,7 +72,7 @@ SynthDef(\dxkAllpassLMono, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1,
 	Out.ar(out, outsig);
 }, [0.5, 0.5, 0.5]).add;
 
-SynthDef(\dxkAllpassCMono, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, decaytime = 1, in = 50, out = 0, amp = 1|
+SynthDef(\dxkAllpassCM, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, decaytime = 1, in = 50, out = 0, amp = 1|
 	var input, wetsig, outsig;
 	input = In.ar(in,1);
 	wetsig = AllpassC.ar(input, maxdelay, delaytime, decaytime, 1);
@@ -82,7 +82,7 @@ SynthDef(\dxkAllpassCMono, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1,
 }, [0.5, 0.5, 0.5]).add;
 
 
-SynthDef(\dxkAllpassNStereo, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, decaytime = 1, in = 50, out = 0, amp = 1|
+SynthDef(\dxkAllpassNS, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, decaytime = 1, in = 50, out = 0, amp = 1|
 	var input, wetsig, outsig;
 	input = In.ar(in,2);
 	wetsig = AllpassL.ar(input, maxdelay, delaytime, decaytime, 1);
@@ -91,7 +91,7 @@ SynthDef(\dxkAllpassNStereo, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 
 	Out.ar(out, outsig);
 }, [0.5, 0.5, 0.5]).add;
 
-SynthDef(\dxkAllpassLStereo, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, decaytime = 1, in = 50, out = 0, amp = 1|
+SynthDef(\dxkAllpassLS, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, decaytime = 1, in = 50, out = 0, amp = 1|
 	var input, wetsig, outsig;
 	input = In.ar(in,2);
 	wetsig = AllpassN.ar(input, maxdelay, delaytime, decaytime, 1);
@@ -100,7 +100,7 @@ SynthDef(\dxkAllpassLStereo, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 
 	Out.ar(out, outsig);
 }, [0.5, 0.5]).add;
 
-SynthDef(\dxkAllpassCStereo, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, decaytime = 1, in = 50, out = 0, amp = 1|
+SynthDef(\dxkAllpassCS, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, decaytime = 1, in = 50, out = 0, amp = 1|
 	var input, wetsig, outsig;
 	input = In.ar(in,2);
 	wetsig = AllpassC.ar(input, maxdelay, delaytime, decaytime, 1);
