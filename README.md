@@ -5,6 +5,7 @@ some synth defs for SuperCollider
 - dxkFx - processing synthdefs
 - dxkLoopers - loopers
 - dxkModal - modal synthesis
+- dxkReverb - reverberator synthdefs
 - dxkSimpleDelay - wrappers around Delay UGens
 - dxkSimpleOsc - wrappers around oscillator UGens
 - dxkSimpleVerb - wrappers around reverb UGens
