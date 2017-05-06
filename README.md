@@ -1,5 +1,6 @@
 # DxkSynthDefs
 some synth defs for SuperCollider
+(note: files/synthdefs with dxkX instead of plain dxk use XOut, usually for effects synthdefs)
 
 - dxkDrums - a collection of percussion synthdefs
 - dxkFx - processing synthdefs
