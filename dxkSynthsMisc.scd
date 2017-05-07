@@ -35,3 +35,36 @@ SynthDef(\dxkClikFilt, {|t_trig = 1, samplen = 1, freq = 440, rq = 0.1, amp = 1,
 	output = Pan2.ar(output, pan);
 	Out.ar(out, output);
 }).add;
+
+
+SynthDef(\dxkWNoiseBPFADSR, {|gate = 1, freq= 440, rq = 0.1, att = 0.01, decay = 0.3, suslvl = 0.5, rel =1, amp = 1, pan = 0, out =0|
+	var env, output, noise;
+
+	noise = WhiteNoise.ar();
+	env = EnvGen.ar(Env.adsr(att,decay,suslvl,rel),gate, doneAction: 2);
+	output = BPF.ar(noise, freq, rq, amp);
+	output = output * env;
+	output = Pan2.ar(output, pan);
+	Out.ar(out, output); 
+}).add;
+	
+
+SynthDef(\dxkWNoizBPFASR, {|gate = 1, freq = 440, rq = 0.1, att = 0.001, rel = 0.001, amp = 1, pan =0, out = 0|
+	var env, output, noise;
+	noise = WhiteNoise.ar();
+	env = EnvGen.ar(Env.asr(att, 1, rel), gate, doneAction: 2);
+	output = BPF.ar(noise, freq, rq, amp);
+	output = output * env;
+	output = Pan2.ar(output, pan);
+	Out.ar(out, output); 
+}).add;
+
+SynthDef(\dxkWNoizBPFPerc, {|gate = 1, freq = 440, rq = 0.1, att = 0.01, rel = 1, curve = -4, amp = 1, pan =0, out = 0|
+	var env, output, noise;
+	noise = WhiteNoise.ar();
+	env = EnvGen.ar(Env.perc(att,rel, 1, curve),gate, doneAction: 2);
+	output = BPF.ar(noise, freq, rq, amp);
+	output = output * env;
+	output = Pan2.ar(output, pan);
+	Out.ar(out, output); 
+}).add;
