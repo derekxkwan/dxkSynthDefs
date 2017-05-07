@@ -1,5 +1,6 @@
 # DxkSynthDefs
 some synth defs for SuperCollider
+
 (note: files/synthdefs with dxkX instead of plain dxk use XOut, usually for effects synthdefs)
 
 - dxkDrums - a collection of percussion synthdefs
@@ -15,4 +16,4 @@ some synth defs for SuperCollider
 
 NOT MINE (mostly for archival/collection purposes)
 
-- notMineDrums - adapted cymbal808_ryan and varioussmallfires's fm-gong with some code cleaning
+- notMineSynths - adapted cymbal808_ryan, varioussmallfires's fm-gong, sccode coreyker's detuned synth pad and with some code cleaning
