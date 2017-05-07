@@ -63,7 +63,7 @@ SynthDef("vsfFmGong", {|freq = 100, amp = 1, dr = 1, out = 0, pan = 0|
 //Detuned Synth Pad by coreyker from sccode.org http://sccode.org/1-4YS
 //in turn taken from http://www.attackmagazine.com/technique/synth-secrets/detuned-pad/
 //added amp, pan (instead of original Splay), changed some variables to args (lfo/lop/detune)
-(
+
 SynthDef(\coreyDesyp, {|gate = 1, freq = 440, lfofreq = 3, lopfreq = 800, rq = 0.5,
 	detune1 = 12, detune2 = 8, amp = 1, pan = 0, out = 0|
 	var env = EnvGen.ar(Env.adsr(1e-8, 1e-6, 0.75, 0.125, amp), gate, doneAction:2);
@@ -85,4 +85,4 @@ SynthDef(\coreyDesyp, {|gate = 1, freq = 440, lfofreq = 3, lopfreq = 800, rq = 0
 	output = Pan2.ar(output*env, pan);
 	Out.ar(out, output);
 }).add;
-)
+
