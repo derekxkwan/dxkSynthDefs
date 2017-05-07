@@ -24,6 +24,70 @@ SynthDef(\dxkXBitcrushS, {|bits = 64, downsamp = 1, amp = 1,  out = 0, gate = 1|
 }).add;
 
 
+SynthDef(\dxkTanhM, {|pregain = 2, amp = 1, distort = 0, in = 10, out = 0, gate = 1|
+	var input, output, selector, env;
+	env = Linen.kr(gate, 0.05, 1, 0.1, 2);
+	selector = BinaryOpUGen('>', distort, 1);
+	input = In.ar(in, 1);
+	output = Select.ar(selector, [input, (input*pregain).tanh]);
+	output = output * amp;
+	XOut.ar(out, env, output);
+}).add;
+
+
+SynthDef(\dxkTanhS, {|pregain = 2, amp = 1, distort = 0, in = 10, out = 0, gate = 1|
+	var input, output, selector, env;
+	env = Linen.kr(gate, 0.05, 1, 0.1, 2);
+	selector = BinaryOpUGen('>', distort, 1);
+	input = In.ar(in, 2);
+	output = Select.ar(selector, [input, (input*pregain).tanh]);
+	output = output * amp;
+	XOut.ar(out, env, output);
+}).add;
+
+SynthDef(\dxkDistortM, {|pregain = 2, amp = 1, distort = 0, in = 10, out = 0, gate = 1|
+	var input, output, selector, env;
+	env = Linen.kr(gate, 0.05, 1, 0.1, 2);
+	selector = BinaryOpUGen('>', distort, 1);
+	input = In.ar(in, 1);
+	output = Select.ar(selector, [input, (input*pregain).distort]);
+	output = output * amp;
+	XOut.ar(out, env, output);
+}).add;
+
+
+SynthDef(\dxkDistortS, {|pregain = 2, amp = 1, distort = 0, in = 10, out = 0, gate = 1|
+	var input, output, selector, env;
+	env = Linen.kr(gate, 0.05, 1, 0.1, 2);
+	selector = BinaryOpUGen('>', distort, 1);
+	input = In.ar(in, 2);
+	output = Select.ar(selector, [input, (input*pregain).distort]);
+	output = output * amp;
+	XOut.ar(out, env, output);
+}).add;
+
+SynthDef(\dxkSoftclipM, {|pregain = 2, amp = 1, distort = 0, in = 10, out = 0, gate = 1|
+	var input, output, selector, env;
+	env = Linen.kr(gate, 0.05, 1, 0.1, 2);
+	selector = BinaryOpUGen('>', distort, 1);
+	input = In.ar(in, 1);
+	output = Select.ar(selector, [input, (input*pregain).softclip]);
+	output = output * amp;
+	XOut.ar(out, env, output);
+}).add;
+
+
+SynthDef(\dxkSoftclipS, {|pregain = 2, amp = 1, distort = 0, in = 10, out = 0, gate = 1|
+	var input, output, selector, env;
+	env = Linen.kr(gate, 0.05, 1, 0.1, 2);
+	selector = BinaryOpUGen('>', distort, 1);
+	input = In.ar(in, 2);
+	output = Select.ar(selector, [input, (input*pregain).softclip]);
+	output = output * amp;
+	XOut.ar(out, env, output);
+}).add;
+
+
 //requires sc3-plugins
 SynthDef(\dxkXDecimM, {|bits = 24, downsamp = 1, amp =1, pan = 0,  out = 0, gate = 1|
 	var input, output, env;
