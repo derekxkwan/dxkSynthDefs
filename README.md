@@ -15,4 +15,4 @@ some synth defs for SuperCollider
 
 NOT MINE (mostly for archival/collection purposes)
 
-- notMineDrums - so far, only adapted cymbal808_ryan (but reintroduced use of baseFreq)
+- notMineDrums - adapted cymbal808_ryan and varioussmallfires's fm-gong with some code cleaning
