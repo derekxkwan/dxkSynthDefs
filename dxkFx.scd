@@ -21,7 +21,7 @@ SynthDef(\dxkBitcrushS, {|bits = 64, downsamp = 1, amp = 1, in = 10, out = 0|
 }).add;
 
 
-SynthDef(\dxkTanhM, {|pregain = 2, amp = 1, distort = 0, in = 10, out = 0|
+SynthDef(\dxkTanhM, {|pregain = 2, amp = 1, distort = 1, in = 10, out = 0|
 	var input, output, selector;
 	selector = BinaryOpUGen('>', distort, 1);
 	input = In.ar(in, 1);
@@ -31,7 +31,7 @@ SynthDef(\dxkTanhM, {|pregain = 2, amp = 1, distort = 0, in = 10, out = 0|
 }).add;
 
 
-SynthDef(\dxkTanhS, {|pregain = 2, amp = 1, distort = 0, in = 10, out = 0|
+SynthDef(\dxkTanhS, {|pregain = 2, amp = 1, distort = 1, in = 10, out = 0|
 	var input, output, selector;
 	selector = BinaryOpUGen('>', distort, 1);
 	input = In.ar(in, 2);
@@ -40,7 +40,7 @@ SynthDef(\dxkTanhS, {|pregain = 2, amp = 1, distort = 0, in = 10, out = 0|
 	Out.ar(out, output);
 }).add;
 
-SynthDef(\dxkDistortM, {|pregain = 2, amp = 1, distort = 0, in = 10, out = 0|
+SynthDef(\dxkDistortM, {|pregain = 2, amp = 1, distort = 1, in = 10, out = 0|
 	var input, output, selector;
 	selector = BinaryOpUGen('>', distort, 1);
 	input = In.ar(in, 1);
@@ -50,7 +50,7 @@ SynthDef(\dxkDistortM, {|pregain = 2, amp = 1, distort = 0, in = 10, out = 0|
 }).add;
 
 
-SynthDef(\dxkDistortS, {|pregain = 2, amp = 1, distort = 0, in = 10, out = 0|
+SynthDef(\dxkDistortS, {|pregain = 2, amp = 1, distort = 1, in = 10, out = 0|
 	var input, output, selector;
 	selector = BinaryOpUGen('>', distort, 1);
 	input = In.ar(in, 2);
@@ -59,7 +59,7 @@ SynthDef(\dxkDistortS, {|pregain = 2, amp = 1, distort = 0, in = 10, out = 0|
 	Out.ar(out, output);
 }).add;
 
-SynthDef(\dxkSoftclipM, {|pregain = 2, amp = 1, distort = 0, in = 10, out = 0|
+SynthDef(\dxkSoftclipM, {|pregain = 2, amp = 1, distort = 1, in = 10, out = 0|
 	var input, output, selector;
 	selector = BinaryOpUGen('>', distort, 1);
 	input = In.ar(in, 1);
@@ -69,7 +69,7 @@ SynthDef(\dxkSoftclipM, {|pregain = 2, amp = 1, distort = 0, in = 10, out = 0|
 }).add;
 
 
-SynthDef(\dxkSoftclipS, {|pregain = 2, amp = 1, distort = 0, in = 10, out = 0|
+SynthDef(\dxkSoftclipS, {|pregain = 2, amp = 1, distort = 1, in = 10, out = 0|
 	var input, output, selector;
 	selector = BinaryOpUGen('>', distort, 1);
 	input = In.ar(in, 2);

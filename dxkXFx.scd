@@ -24,7 +24,7 @@ SynthDef(\dxkXBitcrushS, {|bits = 64, downsamp = 1, amp = 1,  out = 0, gate = 1|
 }).add;
 
 
-SynthDef(\dxkTanhM, {|pregain = 2, amp = 1, distort = 0, in = 10, out = 0, gate = 1|
+SynthDef(\dxkXTanhM, {|pregain = 2, amp = 1, distort = 1, in = 10, out = 0, gate = 1|
 	var input, output, selector, env;
 	env = Linen.kr(gate, 0.05, 1, 0.1, 2);
 	selector = BinaryOpUGen('>', distort, 1);
@@ -35,7 +35,7 @@ SynthDef(\dxkTanhM, {|pregain = 2, amp = 1, distort = 0, in = 10, out = 0, gate 
 }).add;
 
 
-SynthDef(\dxkTanhS, {|pregain = 2, amp = 1, distort = 0, in = 10, out = 0, gate = 1|
+SynthDef(\dxkXTanhS, {|pregain = 2, amp = 1, distort = 1, in = 10, out = 0, gate = 1|
 	var input, output, selector, env;
 	env = Linen.kr(gate, 0.05, 1, 0.1, 2);
 	selector = BinaryOpUGen('>', distort, 1);
@@ -45,7 +45,7 @@ SynthDef(\dxkTanhS, {|pregain = 2, amp = 1, distort = 0, in = 10, out = 0, gate 
 	XOut.ar(out, env, output);
 }).add;
 
-SynthDef(\dxkDistortM, {|pregain = 2, amp = 1, distort = 0, in = 10, out = 0, gate = 1|
+SynthDef(\dxkXDistortM, {|pregain = 2, amp = 1, distort = 1, in = 10, out = 0, gate = 1|
 	var input, output, selector, env;
 	env = Linen.kr(gate, 0.05, 1, 0.1, 2);
 	selector = BinaryOpUGen('>', distort, 1);
@@ -56,7 +56,7 @@ SynthDef(\dxkDistortM, {|pregain = 2, amp = 1, distort = 0, in = 10, out = 0, ga
 }).add;
 
 
-SynthDef(\dxkDistortS, {|pregain = 2, amp = 1, distort = 0, in = 10, out = 0, gate = 1|
+SynthDef(\dxkXDistortS, {|pregain = 2, amp = 1, distort = 1, in = 10, out = 0, gate = 1|
 	var input, output, selector, env;
 	env = Linen.kr(gate, 0.05, 1, 0.1, 2);
 	selector = BinaryOpUGen('>', distort, 1);
@@ -66,7 +66,7 @@ SynthDef(\dxkDistortS, {|pregain = 2, amp = 1, distort = 0, in = 10, out = 0, ga
 	XOut.ar(out, env, output);
 }).add;
 
-SynthDef(\dxkSoftclipM, {|pregain = 2, amp = 1, distort = 0, in = 10, out = 0, gate = 1|
+SynthDef(\dxkXSoftclipM, {|pregain = 2, amp = 1, distort = 1, in = 10, out = 0, gate = 1|
 	var input, output, selector, env;
 	env = Linen.kr(gate, 0.05, 1, 0.1, 2);
 	selector = BinaryOpUGen('>', distort, 1);
@@ -77,7 +77,7 @@ SynthDef(\dxkSoftclipM, {|pregain = 2, amp = 1, distort = 0, in = 10, out = 0, g
 }).add;
 
 
-SynthDef(\dxkSoftclipS, {|pregain = 2, amp = 1, distort = 0, in = 10, out = 0, gate = 1|
+SynthDef(\dxkXSoftclipS, {|pregain = 2, amp = 1, distort = 1, in = 10, out = 0, gate = 1|
 	var input, output, selector, env;
 	env = Linen.kr(gate, 0.05, 1, 0.1, 2);
 	selector = BinaryOpUGen('>', distort, 1);
