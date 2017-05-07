@@ -21,3 +21,41 @@ SynthDef(\cymbal808_ryan, {|out=0, freq = 300, time = 0.25, amp=0.1|
 	signal = [signal, DelayN.ar(signal, 0.005, 0.005)];
 	OffsetOut.ar(out, signal*4*amp);
 }).add;
+
+
+//fm-gong from http://varioussmallfires.blogspot.ca/2012/01/supercollider-gong.html
+//but with some tweaks for panning, etc and matrixing variables
+SynthDef("vsfFmGong", {|freq = 100, amp = 1, dr = 1, out = 0, pan = 0| 
+
+	var modsig, modf = freq * [1.16, 3.14, 1.005];
+	var idx = [[0.01, 0.3],[0.01,0.38], [0.01, 0.5]] * modf;
+	var idxscaler = Array.fill(idx.size, {|i| idx[i][1] - idx[i][0]});
+	var modenv = Array.newClear(modf.size);
+	var ampenv, carsig, lfo, output;
+
+	lfo = SinOsc.ar(3, 0, XLine.kr(freq*0.005, freq*0.05, dr));
+
+	modenv[0] = EnvGen.kr(
+		Env(levels: [0,1,1,0], times: [0.75*dr, 0.24*dr, 0.01*dr]),
+		doneAction: 2);
+
+	modenv[1] = EnvGen.kr(
+		Env(levels: [0,1,0], times: [0.02*dr, 0.98*dr]),
+		doneAction: 2);
+
+	modenv[2] = EnvGen.kr(
+		Env(levels: [ 0, 0.3, 1, 0.5, 0], times: [0.15 * dr, 0.15 *dr, 0.45*dr, 0.25*dr]),
+		doneAction: 2);
+
+	// Exp curve...
+	ampenv = EnvGen.kr(
+		Env(levels: [ 0, 1, 0.001], times: [0.002, dr - 0.002], curve: \exp),
+		doneAction: 2);
+
+	modsig = Mix.new(SinOsc.ar(modf) * ((idx + idxscaler)*modenv));
+	carsig = SinOsc.ar(freq + lfo + modsig)*modf.size.reciprocal;
+	output = carsig * ampenv * amp;
+	output = Pan2.ar(output, pan);
+	Out.ar(out, output);
+
+}).add;
