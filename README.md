@@ -16,4 +16,4 @@ some synth defs for SuperCollider
 
 NOT MINE (mostly for archival/collection purposes)
 
-- notMineSynths - adapted cymbal808_ryan, varioussmallfires's fm-gong, sccode coreyker's detuned synth pad and with some code cleaning
+- notMineSynths - adapted cymbal808_ryan, varioussmallfires's fm-gong, and sccode coreyker's detuned synth pad  with some code cleaning
