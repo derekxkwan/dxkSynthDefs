@@ -87,7 +87,7 @@ SynthDef(\coreyDesyp, {|gate = 1, freq = 440, lfofreq = 3, lopfreq = 800, rq = 0
 }).add;
 
 // abstracted out from 08091500Acid309 by_otophilia
-SynthDef("otoClap", {	|rel = 0.3, hip1 = 600, bp1 = 2000, brq1 = 3, hip2 = 1000, bp2 = 1200, brq2 = 0.7, ampn2 = 0.7, out = 0, pan = 0, amp = 1|
+SynthDef("otoClap", {	|t_trig = 1, rel = 0.3, hip1 = 600, bp1 = 2000, brq1 = 3, hip2 = 1000, bp2 = 1200, brq2 = 0.7, ampn2 = 0.7, out = 0, pan = 0, amp = 1|
 		var env1, env2, output, noise1, noise2;
 		var env1lvl, env1time, env1curve;
 		var env2lvl, env2time, env2curve;
@@ -99,7 +99,7 @@ SynthDef("otoClap", {	|rel = 0.3, hip1 = 600, bp1 = 2000, brq1 = 3, hip2 = 1000,
 		env2time = [0.02, rel];
 		env2curve = [0, -4];
 		
-	    env1 = EnvGen.ar(Env.new(env1lvl, env1time, env1curve)); //attack
+	    env1 = EnvGen.ar(Env.new(env1lvl, env1time, env1curve), t_trig); //attack
      	env2 = EnvGen.ar(Env.new(env2lvl, env2time, env2curve), doneAction:2); //release
 		
 		noise1 = WhiteNoise.ar(env1);
@@ -118,13 +118,13 @@ SynthDef("otoClap", {	|rel = 0.3, hip1 = 600, bp1 = 2000, brq1 = 3, hip2 = 1000,
 }).add;
 
 // abstracted out from 08091500Acid309 by_otophilia
-SynthDef("otoHh", {|rel = 0.2, hip1 = 1000, bp2 = 6000, brq1 = 2, brq2 = 0.9, bls2 = 3000, brs2 = 0.5, hip2 = 1000, hrq2 = 1.5, out = 0, amp = 1, pan = 0|	
+SynthDef("otoHh", {|t_trig =1, rel = 0.2, hip1 = 1000, bp2 = 6000, brq1 = 2, brq2 = 0.9, bls2 = 3000, brs2 = 0.5, hip2 = 1000, hrq2 = 1.5, out = 0, amp = 1, pan = 0|	
 		var env1, env2, output, oscs1, noise, n = 5, n2 = 8;
 		 
 		thisThread.randSeed = 4;
 		
-		env1 = EnvGen.ar(Env.new([0, 1.0, 0], [0.001, rel], [0, -12]), doneAction: 2);
-		env2 = EnvGen.ar(Env.new([0, 1.0, 0.05, 0], [0.002, 0.25*rel, 0.15*rel], [0, -4, -4]), doneAction:0);
+		env1 = EnvGen.ar(Env.new([0, 1.0, 0], [0.001, rel], [0, -12]), t_trig, doneAction: 2);
+		env2 = EnvGen.ar(Env.new([0, 1.0, 0.05, 0], [0.002, 0.25*rel, 0.15*rel], [0, -4, -4]), t_trig, doneAction:0);
 
 	    //tone
 		oscs1 = Mix.fill(n, {|i|
@@ -155,4 +155,30 @@ SynthDef("otoHh", {|rel = 0.2, hip1 = 1000, bp2 = 6000, brq1 = 2, brq2 = 0.9, bl
 		Out.ar(out, output);
 	}).add;
 
+
+// abstracted out from 08091500Acid309 by_otophilia
+SynthDef("otoSd", {	|t_trig = 1, freq = 60, fglide = 1.83, fdip - 0.82, rel = 0.13, hipsn = 200, snrq1 = 2, bpsn = 6900, snrq2 = 0.6, amptone = 1, ampsnares = 0.2, out = 0, amp = 1, pan = 0|
+		var env0, env1, env2, env1m, oscs, noise, output;
+		
+		env0 = EnvGen.ar(Env.new([0.5, 1, 0.5, 0], [0.005, rel*0.23, rel*0.77], [-4, -2, -4]), t_trig, amptone);
+		env1 = EnvGen.ar(Env.new([freq*fglide, freq, freq*fdip], [0.005, rel*0.77], [-4, -5]), t_trig);
+		env1m = env1.midicps;
+		env2 = EnvGen.ar(Env.new([1, 0.4, 0], [0.05, rel], [-2, -2]), t_trig, doneAction:2);
+		
+		oscs = LFPulse.ar(env1m, 0, 0.5, 1, -0.5) + LFPulse.ar(env1m * 1.6, 0, 0.5, 0.5, -0.25);
+		oscs = LPF.ar(oscs, env1m*1.2, env0);
+		oscs = oscs + SinOsc.ar(env1m, 0.8, env0);
+		
+		noise = WhiteNoise.ar(0.2);
+		noise = HPF.ar(noise, hipsn, snrq1);
+		noise = BPF.ar(noise, bpsn, snrq2, 3) + noise;
+		noise = noise * env2;
+		
+		output = oscs + noise;
+	    output = output.clip2(1) * amp;
+	    output = Pan2.ar(output, pan);
+			
+		Out.ar(out, output);
+	}).add;
+	
 
