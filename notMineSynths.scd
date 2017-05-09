@@ -179,6 +179,41 @@ SynthDef("otoSd", {	|t_trig = 1, freq = 60, fglide = 1.83, fdip - 0.82, rel = 0.
 	    output = Pan2.ar(output, pan);
 			
 		Out.ar(out, output);
-	}).add;
+}).add;
+
+// abstracted out from 08091500Acid309 by_otophilia
+//changed env2 to multiplicative instead of additive
+	SynthDef("otoAcid", {|gate = 1, freq = 440, rq = 0.3, out = 0, amp = 1, pan = 0|	
+		var env1, env2, output;
+		freq = Lag.kr(freq, 0.12 * (1-Trig.kr(gate, 0.001)) * gate);
+		env1 = EnvGen.ar(Env.new([0, 1.0, 0, 0], [0.001, 2.0, 0.04], [0, -4, -4], 2), gate, amp);
+		env2 = EnvGen.ar(Env.adsr(0.001, 0.8, 1, 0.8, 1.4, -4), gate);
+		output = LFPulse.ar(freq, 0.0, 0.51, 2, -1);
 	
+		output = RLPF.ar(output, freq * env2, rq);
+		output = output * env1;
+		output = Pan2.ar(output, pan);
+		
+		Out.ar(out, output);
+	}).add;
+
+// abstracted out from 08091500Acid309 by_otophilia
+
+SynthDef("otoBd", {	|freq = 43, att = 0.005, ampnoise = 1, rel = 0.32, out = 0, pan = 0, amp = 1|
+		var env0, env1, env1m, output;
+		
+		env0 =  EnvGen.ar(Env.new([0.5, 1, 0.5, 0], [att, 0.1875*rel, 0.8125*rel], [-4, -2, -4]), doneAction:2);
+		env1 = EnvGen.ar(Env.new([2.52*freq, 1.35155167*freq, freq], [att, 0.90625*rel], [-4, -5]));
+		
+		
+		output = LFPulse.ar(env1, 0, 0.5, 1, -0.5);
+		output = output + WhiteNoise.ar(ampnoise);
+		output = LPF.ar(output, env1*1.5, env0);
+		output = output + SinOsc.ar(env1, 0.5, env0);
+		
+		output = output * 1.2;
+		output = output.clip2(1)*amp;
+	    output = Pan2.ar(output, pan);
+		Out.ar(out, output);
+	}).add;
 
