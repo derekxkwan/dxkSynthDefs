@@ -115,4 +115,44 @@ SynthDef("otoClap", {	|rel = 0.3, hip1 = 600, bp1 = 2000, brq1 = 3, hip2 = 1000,
 		output = Pan2.ar(output, pan);
 		
 		Out.ar(out, output);
+}).add;
+
+// abstracted out from 08091500Acid309 by_otophilia
+SynthDef("otoHh", {|rel = 0.2, hip1 = 1000, bp2 = 6000, brq1 = 2, brq2 = 0.9, bls2 = 3000, brs2 = 0.5, hip2 = 1000, hrq2 = 1.5, out = 0, amp = 1, pan = 0|	
+		var env1, env2, output, oscs1, noise, n = 5, n2 = 8;
+		 
+		thisThread.randSeed = 4;
+		
+		env1 = EnvGen.ar(Env.new([0, 1.0, 0], [0.001, rel], [0, -12]), doneAction: 2);
+		env2 = EnvGen.ar(Env.new([0, 1.0, 0.05, 0], [0.002, 0.25*rel, 0.15*rel], [0, -4, -4]), doneAction:0);
+
+	    //tone
+		oscs1 = Mix.fill(n, {|i|
+			SinOsc.ar(
+				( i.linlin(0, n-1, 42, 74) + rand2(4.0) ).midicps,
+				SinOsc.ar( (i.linlin(0, n-1, 78, 80) + rand2(4.0) ).midicps, 0.0, 12),
+				1/n
+			)
+		});
+		
+	    oscs1 = BHiPass.ar(oscs1, hip1, brq1, env1);
+
+	    //noise
+		noise = WhiteNoise.ar;
+		noise = Mix.fill(n2, {|i|
+			var freq;
+			freq = (i.linlin(0, n-1, 40, 50) + rand2(4.0) ).midicps.reciprocal;
+			CombN.ar(noise, 0.04, freq, 0.1)
+		}) * (1/n) + noise;
+		noise = BPF.ar(noise, bp2, brq2, 0.5, noise);
+		noise = BLowShelf.ar(noise, bls2, brs2, -6);
+		noise = BHiPass.ar(noise, hip2, hrq2, env2);
+		
+		output = noise + oscs1;
+		output = output.softclip;
+		output = output * amp;
+		output = Pan2.ar(output, pan);
+		Out.ar(out, output);
 	}).add;
+
+
