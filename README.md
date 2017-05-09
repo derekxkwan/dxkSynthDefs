@@ -12,8 +12,9 @@ some synth defs for SuperCollider
 - dxkSimpleDelay - wrappers around Delay UGens
 - dxkSimpleOsc - wrappers around oscillator UGens
 - dxkSimpleVerb - wrappers around reverb UGens
+- dxkSupSynths - synthdefs that require classes from my dxkSup repo
 - dxkSynthsMisc - various synthesizers (such as DTMF)
 
 NOT MINE (mostly for archival/collection purposes)
 
-- notMineSynths - adapted cymbal808_ryan, varioussmallfires's fm-gong, and sccode coreyker's detuned synth pad  with some code cleaning
+- notMineSynths - curated synthdefs from around the web that aren't my work but involve various levels of tweaking by myself
