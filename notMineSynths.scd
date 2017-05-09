@@ -86,3 +86,33 @@ SynthDef(\coreyDesyp, {|gate = 1, freq = 440, lfofreq = 3, lopfreq = 800, rq = 0
 	Out.ar(out, output);
 }).add;
 
+// abstracted out from 08091500Acid309 by_otophilia
+SynthDef("otoClap", {	|rel = 0.3, hip1 = 600, bp1 = 2000, brq1 = 3, hip2 = 1000, bp2 = 1200, brq2 = 0.7, ampn2 = 0.7, out = 0, pan = 0, amp = 1|
+		var env1, env2, output, noise1, noise2;
+		var env1lvl, env1time, env1curve;
+		var env2lvl, env2time, env2curve;
+
+		env1lvl = [0, 1, 0, 1, 0, 1, 0, 1, 0];
+		env1time = [0.001, 0.013, 0, 0.01, 0, 0.01, 0, 0.03];
+		env1curve = [0, -3, 0, -3, 0, -3, 0, -4];
+		env2lvl = [0,1,0];
+		env2time = [0.02, rel];
+		env2curve = [0, -4];
+		
+	    env1 = EnvGen.ar(Env.new(env1lvl, env1time, env1curve)); //attack
+     	env2 = EnvGen.ar(Env.new(env2lvl, env2time, env2curve), doneAction:2); //release
+		
+		noise1 = WhiteNoise.ar(env1);
+		noise1 = HPF.ar(noise1, hip1);
+		noise1 = BPF.ar(noise1, bp1, brq1);
+		
+		noise2 = WhiteNoise.ar(env2);
+		noise2 = HPF.ar(noise2, hip2);
+		noise2 = BPF.ar(noise2, bp2, brq2, ampn2);
+		
+		output = noise1 + noise2;
+		output = output.softclip * amp;
+		output = Pan2.ar(output, pan);
+		
+		Out.ar(out, output);
+	}).add;
