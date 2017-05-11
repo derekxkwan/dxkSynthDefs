@@ -17,9 +17,9 @@ SynthDef(\dxkPulseADSR, {|out = 0, freq = 440, amp = 1, pan = 0, width = 0.5,att
 	}).add;
 
 
-SynthDef(\dxkPulsePerc, {|out = 0, freq = 440, amp = 1, pan = 0, width = 0.5,att = 0.01,rel = 1, curve = -4, gate = 1|
+SynthDef(\dxkPulsePerc, {|t_trig = 1, out = 0, freq = 440, amp = 1, pan = 0, width = 0.5,att = 0.01,rel = 1, curve = -4|
 	var sig,env;
-	env = EnvGen.ar(Env.perc(att,rel, 1, curve),gate, doneAction: 2);
+	env = EnvGen.ar(Env.perc(att,rel, 1, curve),t_trig, doneAction: 2);
 	sig = Pulse.ar(freq, width, amp);
 	sig = Pan2.ar(sig, pan);
 	Out.ar(out,sig*env);
@@ -44,9 +44,9 @@ SynthDef(\dxkSinADSR, {|out = 0, freq = 440, amp = 1, pan = 0, att = 0.01, decay
 
 
 
-SynthDef(\dxkSinPerc, {|out = 0, freq = 440, amp = 1, pan = 0, att = 0.001,rel = 1, curve = -4, gate = 1|
+SynthDef(\dxkSinPerc, {|t_trig = 1, out = 0, freq = 440, amp = 1, pan = 0, att = 0.001,rel = 1, curve = -4|
 	var sig,env;
-	env = EnvGen.ar(Env.perc(att,rel, 1, curve),gate, doneAction: 2);
+	env = EnvGen.ar(Env.perc(att,rel, 1, curve),t_trig, doneAction: 2);
 	sig = SinOsc.ar(freq, 0, amp);
 	sig = Pan2.ar(sig, pan);
 	Out.ar(out,sig*env);
@@ -72,9 +72,9 @@ SynthDef(\dxkVarSawADSR, {|out = 0, freq = 440, amp = 1, pan = 0, width = 0.5, a
 	}).add;
 
 
-SynthDef(\dxkVarSawPerc, {|out = 0, freq = 440, amp = 1, pan = 0, width = 0.5,att = 0.01,rel = 1, curve = -4, gate = 1|
+SynthDef(\dxkVarSawPerc, {|t_trig = 1, out = 0, freq = 440, amp = 1, pan = 0, width = 0.5,att = 0.01,rel = 1, curve = -4|
 	var sig,env;
-	env = EnvGen.ar(Env.perc(att,rel, 1, curve),gate, doneAction: 2);
+	env = EnvGen.ar(Env.perc(att,rel, 1, curve), t_trig, doneAction: 2);
 	sig = VarSaw.ar(freq, 0,width, amp);
 	sig = Pan2.ar(sig, pan);
 	Out.ar(out,sig*env);
@@ -100,9 +100,9 @@ SynthDef(\dxkSawADSR, {|out = 0, freq = 440, amp = 1, pan = 0, att = 0.01, decay
 
 
 
-SynthDef(\dxkSawPerc, {|out = 0, freq = 440, amp = 1, pan = 0, att = 0.01,rel = 1, curve = -4, gate = 1|
+SynthDef(\dxkSawPerc, {|t_trig = 1, out = 0, freq = 440, amp = 1, pan = 0, att = 0.01,rel = 1, curve = -4, gate = 1|
 	var sig,env;
-	env = EnvGen.ar(Env.perc(att,rel, 1, curve),gate, doneAction: 2);
+	env = EnvGen.ar(Env.perc(att,rel, 1, curve), t_trig, doneAction: 2);
 	sig = Saw.ar(freq, amp);
 	sig = Pan2.ar(sig, pan);
 	Out.ar(out,sig*env);
@@ -130,9 +130,9 @@ SynthDef(\dxkSin2ADSR, {|out = 0, freq = 440, detune = 0.01, amp = 1, pan = 0, a
 
 
 
-SynthDef(\dxkSin2Perc, {|out = 0, freq = 440, detune = 0.01, amp = 1, pan = 0, att = 0.01,rel = 1, curve = -4, gate = 1|
+SynthDef(\dxkSin2Perc, {|t_trig = 1, out = 0, freq = 440, detune = 0.01, amp = 1, pan = 0, att = 0.01,rel = 1, curve = -4|
 	var sig,env;
-	env = EnvGen.ar(Env.perc(att,rel, 1, curve),gate, doneAction: 2);
+	env = EnvGen.ar(Env.perc(att,rel, 1, curve), t_trig, doneAction: 2);
 	sig = SinOsc.ar([freq,freq*(1+detune)], 0, amp);
 	sig = Mix.new(sig);
 	sig = Pan2.ar(sig, pan);
