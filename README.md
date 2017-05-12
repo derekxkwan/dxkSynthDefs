@@ -5,6 +5,7 @@ some synth defs for SuperCollider
 
 - dxkDrums - a collection of percussion synthdefs
 - dxkFx - processing synthdefs
+- dxkFxFFT - prelim work on some frequency-domain processing synthdefs (simple wrappers for now)
 - dxkLoopers - loopers
 - dxkModal - modal synthesis
 - dxkNobu - sample chopping buf readers
