@@ -27,7 +27,7 @@ SynthDef(\dxkPNobuS, {|buf, gate = 1, loc = 0,  ramp = 0.001, rate = 1, amp = 1,
 }).add;
 
 SynthDef(\dxkPNobuStutM, {|buf, gate = 1, loc = 0,  ramp = 0.001, stutramp = 0.001, rate = 1, stut = 0,
-	maxdelay = 5, stutlen = 0.1, amp = 1, pan = 0, out = 0|
+	maxdelay = 1, stutlen = 0.1, amp = 1, pan = 0, out = 0|
 	//stutlen is in real time seconds
 	//regular nobu vars
 	var output, rdphs, bufsize, trig, del_trig, real_loc, env;
@@ -54,7 +54,7 @@ SynthDef(\dxkPNobuStutM, {|buf, gate = 1, loc = 0,  ramp = 0.001, stutramp = 0.0
 }).add;
 
 SynthDef(\dxkPNobuStutS, {|buf, gate = 1, loc = 0,  ramp = 0.001, stutramp = 0.001, rate = 1, stut = 0,
-	maxdelay = 5, stutlen = 0.1, amp = 1, out = 0|
+	maxdelay = 1, stutlen = 0.1, amp = 1, out = 0|
 	//stutlen is in real time seconds
 	//regular nobu vars
 	var output, rdphs, bufsize, trig, del_trig, real_loc, env;
@@ -98,8 +98,8 @@ SynthDef(\dxkNobuM, {|buf, t_trig = 1, loc = -1, rate = 1, ramp = 0.001, out = 0
 
 
 
-SynthDef(\dxkNobuStutM, {|buf, t_trig = 1, loc = -1, rate = 1, ramp = 0.001, stutramp = 0.001, rate = 1, stut = 0,
-	maxdelay = 5, stutlen = 0.1, amp = 1, out = 0|
+SynthDef(\dxkNobuStutM, {|buf, t_trig = 1, loc = -1, rate = 1, ramp = 0.001, stutramp = 0.001, stut = 0,
+	maxdelay = 1, stutlen = 0.1, amp = 1, out = 0|
 	//stutlen is in real time seconds
 	//regular nobu vars
 	var output, rdphs, bufsize, trig, del_trig, real_loc, env, gate;
@@ -147,8 +147,8 @@ SynthDef(\dxkNobuS, {|buf, t_trig = 1, loc = -1, rate = 1, ramp = 0.001, out = 0
 
 
 
-SynthDef(\dxkNobuStutS, {|buf, t_trig = 1, loc = -1, rate = 1, ramp = 0.001, stutramp = 0.001, rate = 1, stut = 0,
-	maxdelay = 5, stutlen = 0.1, amp = 1, out = 0|
+SynthDef(\dxkNobuStutS, {|buf, t_trig = 1, loc = -1, rate = 1, ramp = 0.001, stutramp = 0.001, stut = 0,
+	maxdelay = 1, stutlen = 0.1, amp = 1, out = 0|
 	//stutlen is in real time seconds
 	//regular nobu vars
 	var output, rdphs, bufsize, trig, del_trig, real_loc, env, gate;
