@@ -16,7 +16,7 @@ some synth defs for SuperCollider
 - dxkSimpleVerb - wrappers around reverb UGens
 - dxkSupSynths - synthdefs that require classes from my dxkSup repo
 - dxkSynthsMisc - various synthesizers (such as DTMF)
-
+- TooBigSynths - synths too big to send via UDP packet
 NOT MINE (mostly for archival/collection purposes)
 
 - notMineSynths - curated synthdefs from around the web that aren't my work but involve various levels of tweaking by myself
