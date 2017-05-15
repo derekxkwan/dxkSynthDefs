@@ -28,3 +28,17 @@ SynthDef(\dxkFmADSR, {|gate = 1, freq = 440, modharm = #[2,3,4,6], modidx = #[0.
 }).add;
 
 
+
+//fm drums
+//ported from an infamous ae patch
+SynthDef(\dxkFmHh, {|t_trig = 1, carfreq = 1000, att = 0.003, rel = 0.05, amp =1, out = 0, pan = 0|
+	var output, modidxenv, ampenv;
+	modidxenv = EnvGen.ar(
+		Env([20.63, 2, 0, 5,0],[att/3.0,2*att/3.0,rel/2.0, rel/2.0]),
+		t_trig, doneAction: 0);
+	output = DxkFm.ar(carfreq, 1, 45, modidxenv, amp);
+	ampenv = EnvGen.ar(Env.perc(att, rel), t_trig, doneAction: 2);
+	output = output * ampenv;
+	output = Pan2.ar(output, pan);
+	Out.ar(out, output);
+}).add;
