@@ -68,3 +68,14 @@ SynthDef(\dxkWNoizBPFPerc, {|gate = 1, freq = 440, rq = 0.1, att = 0.01, rel = 1
 	output = Pan2.ar(output, pan);
 	Out.ar(out, output); 
 }).add;
+
+SynthDef(\dxkSimpleFm, {|freq = 440, modharm = 1, modidx = 0.5, amp = 1, out = 0|
+	//harm = harmonicity ratio
+	//modidx = modulation index
+	var h, fm,  carrier, mod;
+	var output;
+	fm = freq * modharm;
+	mod = SinOsc.ar(fm, mul: fm * modidx, add: freq);
+	carrier = SinOsc.ar(mod, mul: amp);
+	Out.ar(out, carrier);
+}, [0.005, 0.005, 0.005, 0.005]).add;
