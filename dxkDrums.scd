@@ -154,3 +154,17 @@ SynthDef(\dxkCymb808_1, {|t_trig = 1, freq = 205.35, len = 0.25, sustain = 0.5, 
 	output = Pan2.ar(output, pan);
 	Out.ar(out, output);
 }).add;
+
+//fm drums
+//ported from an infamous ae patch
+SynthDef(\dxkFmHh, {|t_trig = 1, freq = 1000, att = 0.003, rel = 0.05, amp =1, out = 0, pan = 0|
+	var output, modidxenv, ampenv;
+	modidxenv = EnvGen.ar(
+		Env([20.63, 2, 0, 5,0],[att/3.0,2*att/3.0,rel/2.0, rel/2.0]),
+		t_trig, doneAction: 0);
+	output = DxkFm.ar(freq, 1, 45, modidxenv, amp);
+	ampenv = EnvGen.ar(Env.perc(att, rel), t_trig, doneAction: 2);
+	output = output * ampenv;
+	output = Pan2.ar(output, pan);
+	Out.ar(out, output);
+}).add;
