@@ -24,7 +24,7 @@ SynthDef(\dxkBd2, {|t_trig = 1, basefreq = 55, rq = 0.1, overdrive = 2, samplen 
 	output = BPF.ar(output,basefreq,rq,amp*makeupgain);
 	output = (output * overdrive).tanh;
 	DetectSilence.ar(output, doneAction:2);
-	output = Pan2.ar(output, pan);
+	output = Pan2.ar(output*amp, pan);
 	Out.ar(out, output);
 }).add;
 
@@ -149,8 +149,8 @@ SynthDef(\dxkCymb808_1, {|t_trig = 1, basefreq = 205.35, len = 0.25, sustain = 0
 	output = SOS.ar(output, 0.669886, -1.33977, 0.669886, 0.968752, -0.710791 );
 	output = output * env;
 	output = DelayN.ar(output, 0.005, 0.005);
-	output = FreeVerb.ar(output, sustain, mul:amp);
+	output = FreeVerb.ar(output, sustain);
 	DetectSilence.ar(output, doneAction:2);
-	output = Pan2.ar(output, pan);
+	output = Pan2.ar(output*amp, pan);
 	Out.ar(out, output);
 }).add;
