@@ -1,8 +1,8 @@
-SynthDef(\dxkLooperMono, {|recplay = 0, buf, writelevel = 1, overwrite = 0, ramp = 0.003, inBus =0, outBus = 0, amp = 1|
+fSynthDef(\dxkLooperM2S, {|recplay = 0, buf, writelevel = 1, overwrite = 0, ramp = 0.003, in =0, out = 0, amp = 1, pan = 0|
 	//recplay: 0 = none, 1 = record, 2 = play
 	var input, output, recording, rectrig, recofftrig, playing, playtrig, recenv, playenv, recdelayed, playdelayed, looplen, readenv, readpos, readtrig;
 	
-	input = In.ar(inBus, 1);
+	input = In.ar(in, 1);
 	recording = BinaryOpUGen('==', recplay, 1);
 	rectrig = Trig.kr(recording - 0.5);
 	recofftrig = Trig.kr(0.5 - recording);
@@ -27,5 +27,6 @@ SynthDef(\dxkLooperMono, {|recplay = 0, buf, writelevel = 1, overwrite = 0, ramp
 	
 	output = BufRd.ar(1, buf, readpos, 1);
 	output = output * playenv * readenv;
-	Out.ar(outBus, output);
+	output = Pan2.ar(output,pan, amp);
+	Out.ar(out, output);
 }).add;

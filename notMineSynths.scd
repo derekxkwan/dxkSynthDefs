@@ -64,9 +64,9 @@ SynthDef("vsfFmGong", {|freq = 100, amp = 1, dr = 1, out = 0, pan = 0|
 //in turn taken from http://www.attackmagazine.com/technique/synth-secrets/detuned-pad/
 //added amp, pan (instead of original Splay), changed some variables to args (lfo/lop/detune)
 
-SynthDef(\coreyDesyp, {|gate = 1, freq = 440, lfofreq = 3, lopfreq = 800, rq = 0.5,
+SynthDef(\coreyDesyp, {|gate = 1, freq = 440, att = 0.001, dec = 0.001, sus = 0.75, rel = 0.125, lfofreq = 3, lopfreq = 800, rq = 0.5,
 	detune1 = 12, detune2 = 8, amp = 1, pan = 0, out = 0|
-	var env = EnvGen.ar(Env.adsr(1e-8, 1e-6, 0.75, 0.125, amp), gate, doneAction:2);
+	var env = EnvGen.ar(Env.adsr(att, dec, sus, rel, amp), gate, doneAction:2);
 	var nvoices1 = 5, nvoices2 = 7;
 
 	var osc1 = {
@@ -252,3 +252,38 @@ SynthDef(\spRhodes, {
     Out.ar(out, snd);
 }).add;
 
+//modified from jpdarago's synth with iteration in https://github.com/jpdarago/supercollider-sounds/
+SynthDef.new(\jpdSawIter, {|freq, gate = 1,att = 0.01, dec = 0.3, sus = 0.5, rel = 1,  out = 0, pan = 0, amp = 1|
+	var temp,sum, env, n_saw = 10;
+	sum = 0;
+	env = EnvGen.ar(Env.adsr(att, dec, sus, rel), gate, doneAction: 2);
+	n_saw.do{|count|
+		temp = SinOsc.ar(freq
+			* (count+1)
+			* LFNoise1.kr({Rand(0.05, 0.2)}).range(0.98, 1.02)
+		);
+		sum = sum + temp;
+	};
+	sum = sum * n_saw.reciprocal;
+	sum = Pan2.ar(sum*env*amp, pan);
+	Out.ar(out, sum);
+}).add;
+
+SynthDef(\spKalimba, {
+    |out = 0, freq = 440, amp = 0.1, mix = 0.1, pan = 0|
+    var snd, click;
+    // Basic tone is a SinOsc
+    snd = SinOsc.ar(freq) * EnvGen.ar(Env.perc(0.03, Rand(3.0, 4.0), 1, -7), doneAction: 2);
+	snd = HPF.ar( LPF.ar(snd, 380), 120);
+    // The "clicking" sounds are modeled with a bank of resonators excited by enveloped white noise
+	click = DynKlank.ar(`[
+        // the resonant frequencies are randomized a little to add variation
+        // there are two high resonant freqs and one quiet "bass" freq to give it some depth
+        [240*ExpRand(0.97, 1.02), 2020*ExpRand(0.97, 1.02), 3151*ExpRand(0.97, 1.02)],
+        [-9, 0, -5].dbamp,
+        [0.8, 0.07, 0.08]
+	], BPF.ar(PinkNoise.ar, 6500, 0.1) * EnvGen.ar(Env.perc(0.001, 0.01))) * 0.1;
+	snd = (snd*mix) + (click*(1-mix));
+	snd = Pan2.ar(snd*amp, pan);
+    Out.ar(out, snd);
+}).add;
