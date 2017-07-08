@@ -1,4 +1,4 @@
-fSynthDef(\dxkLooperM2S, {|recplay = 0, buf, writelevel = 1, overwrite = 0, ramp = 0.003, in =0, out = 0, amp = 1, pan = 0|
+SynthDef(\dxkLooperM2S, {|recplay = 0, buf, writelevel = 1, overwrite = 0, ramp = 0.003, in =0, out = 0, amp = 1, pan = 0|
 	//recplay: 0 = none, 1 = record, 2 = play
 	var input, output, recording, rectrig, recofftrig, playing, playtrig, recenv, playenv, recdelayed, playdelayed, looplen, readenv, readpos, readtrig;
 	
