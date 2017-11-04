@@ -11,11 +11,13 @@ some synth defs for SuperCollider
 - dxkNobu - sample chopping buf readers
 - dxkPitched - various other pitched synthdefs
 - dxkReverb - reverberator synthdefs
+- dxkSimpleBuf - wrapper around simple Buf UGens
 - dxkSimpleDelay - wrappers around Delay UGens
 - dxkSimpleOsc - wrappers around oscillator UGens
 - dxkSimpleVerb - wrappers around reverb UGens
 - dxkSupSynths - synthdefs that require classes from my dxkSup repo
 - dxkSynthsMisc - various synthesizers (such as DTMF)
+- dxk TrigStr - triggered buffer stretching synthdefs (warp)
 - TooBigSynths - synths too big to send via UDP packet
 NOT MINE (mostly for archival/collection purposes)
 
