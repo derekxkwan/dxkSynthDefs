@@ -21,4 +21,3 @@ SynthDef(\dxkTrigStr1S, {|t_trig = 1, buf, in = 10, out = 0,  amp = 1, rate = 1,
 	playbk = Warp1.ar(2, buf, playptr, freqScale, windowSize, -1, overlaps, windowRandRatio, interp, amp);
 	Out.ar(out, playbk);
 	}).add;
-	)
