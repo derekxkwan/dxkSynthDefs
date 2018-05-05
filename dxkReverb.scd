@@ -28,7 +28,7 @@ SynthDef(\dxkSchroeder1L, {|amp = #[1,1,1,1], in = 10, out = 0|
 	outC = -1*outD;
 	output = [outA, outB, outC, outD];
 	output = output * amp;
-	Out.ar(out, output);
+	ReplaceOut.ar(out, output);
 }).add;
 
 //1-in,2-out Schroeder Reverberator from Julius O. Smith's Physical Audio Signal Processing
@@ -57,6 +57,6 @@ SynthDef(\dxkSchroeder2L, {| amp = 1, in = 10, out = 0|
 	});
 	output = ap * [1, -1];
 	output = ap * amp;
-	Out.ar(out, output);
+	ReplaceOut.ar(out, output);
 }).add;
 	

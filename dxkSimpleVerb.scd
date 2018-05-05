@@ -3,5 +3,5 @@ SynthDef(\dxkFreeVerb2, {|in = 10, in2 = 11, out = 0, mix = 0.33, room = 0.5, da
 	input = In.ar(in, 1);
 	input2 = In.ar(in2, 1);
 	output = FreeVerb2.ar(input, input2, mix, room, damp, amp);
-	Out.ar(out, output)
+	ReplaceOut.ar(out, output)
 }).add;

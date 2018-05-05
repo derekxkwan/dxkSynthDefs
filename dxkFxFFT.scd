@@ -6,7 +6,7 @@ SynthDef(\dxkPV_MagGateM, {|thresh = 1, remove = 0, hop = 0.5, wintype = 0, wins
 	fft = FFT(LocalBuf(winsize,1), input, hop, wintype, winsize: winsize);
 	fft = PV_MagGate(fft, thresh, remove);
 	output = IFFT(fft, wintype, winsize);
-	Out.ar(out, output*amp);
+	ReplaceOut.ar(out, output*amp);
 }).add;
 
 
@@ -16,5 +16,5 @@ SynthDef(\dxkPV_MagGateS, {|thresh = 1, remove = 0, hop = 0.5, wintype = 0, wins
 	fft = FFT(LocalBuf(winsize, 2), input, hop, wintype, winsize: winsize);
 	fft = PV_MagGate(fft, thresh, remove);
 	output = IFFT(fft, wintype, winsize);
-	Out.ar(out, output*amp);
+	ReplaceOut.ar(out, output*amp);
 }).add;
