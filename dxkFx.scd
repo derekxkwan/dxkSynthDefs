@@ -139,6 +139,26 @@ SynthDef(\dxkStutCS, {|stut = 0, maxdelay = 2, stutlen = 0.1, ramp = 0.001, in =
 }).add;
 
 
+
+SynthDef(\dxkCompM, {|in = 10, ctrl = 10, thresh = 0.99, slopeBelow = 1, slopeAbove = 0.33, clampTime = 0.01, relaxTime = 0.01, out = 0, amp = 1|
+
+	var input, control;
+	input = In.ar(in, 1);
+	control = In.ar(ctrl, 1);
+	input = Compander.ar(input, control, thresh, slopeBelow, slopeAbove, clampTime, relaxTime, amp);
+	Out.ar(out, input);
+}).add;
+
+SynthDef(\dxkCompS, {|in = 10, ctrl = 10, thresh = 0.99, slopeBelow = 1, slopeAbove = 0.33, clampTime = 0.01, relaxTime = 0.01, out = 0, amp = 1|
+
+	var input, control;
+	input = In.ar(in, 1);
+	control = In.ar(ctrl, 1);
+	input = Compander.ar(input, control, thresh, slopeBelow, slopeAbove, clampTime, relaxTime, amp);
+	Out.ar(out, input);
+}).add;
+
+
 //requires sc3-plugins
 SynthDef(\dxkDecimM, {|bits = 24, downsamp = 1, amp =1, pan = 0, in = 10, out = 0|
 	var input, output;
