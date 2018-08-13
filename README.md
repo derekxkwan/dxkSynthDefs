@@ -8,6 +8,7 @@ some synth defs for SuperCollider
 - dxkFx - processing synthdefs
 - dxkFxFFT - prelim work on some frequency-domain processing synthdefs (simple wrappers for now)
 - dxkLoopers - loopers
+- dxkMisc - misc SynthDefs (end-of-fx-chain-outputs, etc.)
 - dxkModal - modal synthesis
 - dxkNobu - sample chopping buf readers
 - dxkPitched - various other pitched synthdefs
