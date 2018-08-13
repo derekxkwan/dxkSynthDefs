@@ -5,6 +5,7 @@ some synth defs for SuperCollider
 
 - dxkDelayFx - delay-based effects (flanger, phaser, chorus)
 - dxkDrums - a collection of percussion synthdefs
+- dxkFilters - wrappers around basic filters 
 - dxkFx - processing synthdefs
 - dxkFxFFT - prelim work on some frequency-domain processing synthdefs (simple wrappers for now)
 - dxkLoopers - loopers
