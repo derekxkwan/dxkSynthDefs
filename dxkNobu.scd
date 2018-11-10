@@ -2,10 +2,10 @@
 
 //for use with patterns
 
-SynthDef(\dxkPNobuM, {|buf, gate = 1, loc = 0,  ramp = 0.001, rate = 1, amp = 1, pan = 0, out = 0|
+SynthDef(\dxkPNobuM, {|buf, gate = 1, loc = 0, rate = 1, amp = 1, pan = 0,  ramp = 0.001, relabs = 0,  out = 0|
 	var output, rdphs, rdphsfor, rdphsback, bufsize, trig, del_trig, real_loc, env;
 	bufsize = BufFrames.ir(buf);
-	real_loc = Clip.kr(loc*bufsize, 0, bufsize);
+	real_loc = Select.kr(relabs % 2, [Clip.kr(loc*bufsize, 0, bufsize), Clip.kr(loc, 0, bufsize)]);
 	rdphsfor = Phasor.ar(0, BufRateScale.kr(buf)*rate, real_loc, bufsize, real_loc);
 	rdphsback = Phasor.ar(0, BufRateScale.kr(buf)*rate, 0, real_loc, real_loc);
 	rdphs = Select.ar(rate >= 0, [rdphsback, rdphsfor]);
@@ -16,10 +16,10 @@ SynthDef(\dxkPNobuM, {|buf, gate = 1, loc = 0,  ramp = 0.001, rate = 1, amp = 1,
 	Out.ar(out,output);
 }).add;
 
-SynthDef(\dxkPNobuS, {|buf, gate = 1, loc = 0,  ramp = 0.001, rate = 1, amp = 1, out = 0|
+SynthDef(\dxkPNobuS, {|buf, gate = 1, loc = 0,  ramp = 0.001, rate = 1, amp = 1, relabs = 0, out = 0|
 	var output, rdphsfor,rdphsback, rdphs, bufsize, trig, del_trig, real_loc, env;
 	bufsize = BufFrames.ir(buf);
-	real_loc = Clip.kr(loc*bufsize, 0, bufsize);
+	real_loc = Select.kr(relabs % 2, [Clip.kr(loc*bufsize, 0, bufsize), Clip.kr(loc, 0, bufsize)]);
 	rdphsfor = Phasor.ar(0, BufRateScale.kr(buf)*rate, real_loc, bufsize, real_loc);
 	rdphsback = Phasor.ar(0, BufRateScale.kr(buf)*rate, 0, real_loc, real_loc);
 	rdphs = Select.ar(rate >= 0, [rdphsback, rdphsfor]);
@@ -30,15 +30,15 @@ SynthDef(\dxkPNobuS, {|buf, gate = 1, loc = 0,  ramp = 0.001, rate = 1, amp = 1,
 	Out.ar(out,output);
 }).add;
 
-SynthDef(\dxkPNobuStutM, {|buf, gate = 1, loc = 0,  ramp = 0.001, stutramp = 0.001, rate = 1, stut = 0,
-	maxdelay = 1, stutlen = 0.1, amp = 1, pan = 0, out = 0|
+SynthDef(\dxkPNobuStutM, {|buf, gate = 1, loc = 0, rate = 1, stut = 0,
+	maxdelay = 1, stutlen = 0.1, amp = 1, pan = 0,  ramp = 0.001,  stutramp = 0.001, relabs = 0, out = 0|
 	//stutlen is in real time seconds
 	//regular nobu vars
 	var output, rdphs, rdphsfor, rdphsback, bufsize, trig, del_trig, real_loc, env;
 	//stutter vars
 	var stutout, delptr, clock, stuttrig, stutenv;
 	bufsize = BufFrames.ir(buf);
-	real_loc = Clip.kr(loc*bufsize, 0, bufsize);
+	real_loc = Select.kr(relabs % 2, [Clip.kr(loc*bufsize, 0, bufsize), Clip.kr(loc, 0, bufsize)]);
 	rdphsfor = Phasor.ar(0, BufRateScale.kr(buf)*rate, real_loc, bufsize, real_loc);
 	rdphsback = Phasor.ar(0, BufRateScale.kr(buf)*rate, 0, real_loc, real_loc);
 	rdphs = Select.ar(rate >= 0, [rdphsback, rdphsfor]);
@@ -59,15 +59,15 @@ SynthDef(\dxkPNobuStutM, {|buf, gate = 1, loc = 0,  ramp = 0.001, stutramp = 0.0
 
 }).add;
 
-SynthDef(\dxkPNobuStutS, {|buf, gate = 1, loc = 0,  ramp = 0.001, stutramp = 0.001, rate = 1, stut = 0,
-	maxdelay = 1, stutlen = 0.1, amp = 1, out = 0|
+SynthDef(\dxkPNobuStutS, {|buf, gate = 1, loc = 0, rate = 1, stut = 0,
+	maxdelay = 1, stutlen = 0.1, amp = 1,  ramp = 0.001, stutramp = 0.001, relabs = 0, out = 0|
 	//stutlen is in real time seconds
 	//regular nobu vars
 	var output, rdphs, rdphsfor, rdphsback, bufsize, trig, del_trig, real_loc, env;
 	//stutter vars
 	var stutout, delptr, clock, stuttrig, stutenv;
 	bufsize = BufFrames.ir(buf);
-	real_loc = Clip.kr(loc*bufsize, 0, bufsize);
+	real_loc = Select.kr(relabs % 2, [Clip.kr(loc*bufsize, 0, bufsize), Clip.kr(loc, 0, bufsize)]);
 	rdphsfor = Phasor.ar(0, BufRateScale.kr(buf)*rate, real_loc, bufsize, real_loc);
 	rdphsback = Phasor.ar(0, BufRateScale.kr(buf)*rate, 0, real_loc, real_loc);
 	rdphs = Select.ar(rate >= 0, [rdphsback, rdphsfor]);
@@ -89,14 +89,14 @@ SynthDef(\dxkPNobuStutS, {|buf, gate = 1, loc = 0,  ramp = 0.001, stutramp = 0.0
 }).add;
 
 //for use outside of patterns
-SynthDef(\dxkNobuM, {|buf, t_trig = 1, loc = -1, rate = 1, ramp = 0.001, out = 0, amp = 1|
+SynthDef(\dxkNobuM, {|buf, t_trig = 1, loc = -1, rate = 1, out = 0, amp = 1,  ramp = 0.001, relabs = 0|
 	var output, rdphs, rdphsfor, rdphsback, bufsize, trig, del_trig, real_loc, env, gate;
 	trig = HPZ1.kr(loc);
 	trig = (trig < 0) + (trig > 0) +t_trig;
 	del_trig = TDelay.kr(trig, ramp);
 	gate = SetResetFF.kr(del_trig, trig);
 	bufsize = BufFrames.ir(buf);
-	real_loc = Clip.kr(loc*bufsize, 0, bufsize);
+	real_loc = Select.kr(relabs % 2, [Clip.kr(loc*bufsize, 0, bufsize), Clip.kr(loc, 0, bufsize)]);
 	rdphsfor = Phasor.ar(del_trig, BufRateScale.kr(buf)*rate, real_loc, bufsize, real_loc);
 	rdphsback = Phasor.ar(del_trig, BufRateScale.kr(buf)*rate, 0, real_loc, real_loc);
 	rdphs = Select.ar(rate >= 0, [rdphsback, rdphsfor]);
@@ -108,8 +108,8 @@ SynthDef(\dxkNobuM, {|buf, t_trig = 1, loc = -1, rate = 1, ramp = 0.001, out = 0
 
 
 
-SynthDef(\dxkNobuStutM, {|buf, t_trig = 1, loc = -1, rate = 1, ramp = 0.001, stutramp = 0.001, stut = 0,
-	maxdelay = 1, stutlen = 0.1, amp = 1, out = 0|
+SynthDef(\dxkNobuStutM, {|buf, t_trig = 1, loc = -1, rate = 1, stut = 0,
+	maxdelay = 1, stutlen = 0.1, amp = 1, ramp = 0.001, stutramp = 0.001, relabs = 0, out = 0|
 	//stutlen is in real time seconds
 	//regular nobu vars
 	var output, rdphs, rdphsfor, rdphsback, bufsize, trig, del_trig, real_loc, env, gate;
@@ -120,7 +120,7 @@ SynthDef(\dxkNobuStutM, {|buf, t_trig = 1, loc = -1, rate = 1, ramp = 0.001, stu
 	del_trig = TDelay.kr(trig, ramp);
 	gate = SetResetFF.kr(del_trig, trig);
 	bufsize = BufFrames.ir(buf);
-	real_loc = Clip.kr(loc*bufsize, 0, bufsize);
+	real_loc = Select.kr(relabs % 2, [Clip.kr(loc*bufsize, 0, bufsize), Clip.kr(loc, 0, bufsize)]);
 	rdphsfor = Phasor.ar(del_trig, BufRateScale.kr(buf)*rate, real_loc, bufsize, real_loc);
 	rdphsback = Phasor.ar(del_trig, BufRateScale.kr(buf)*rate, 0, real_loc, real_loc);
 	rdphs = Select.ar(rate >= 0, [rdphsback, rdphsfor]);
@@ -142,14 +142,14 @@ SynthDef(\dxkNobuStutM, {|buf, t_trig = 1, loc = -1, rate = 1, ramp = 0.001, stu
 }).add;
 
 
-SynthDef(\dxkNobuS, {|buf, t_trig = 1, loc = -1, rate = 1, ramp = 0.001, out = 0, amp = 1|
+SynthDef(\dxkNobuS, {|buf, t_trig = 1, loc = -1, rate = 1, out = 0, amp = 1,  ramp = 0.001, relabs = 0|
 	var output, rdphs, rdphsfor, rdphsback, bufsize, trig, del_trig, real_loc, env, gate;
 	trig = HPZ1.kr(loc);
 	trig = (trig < 0) + (trig > 0) +t_trig;
 	del_trig = TDelay.kr(trig, ramp);
 	gate = SetResetFF.kr(del_trig, trig);
 	bufsize = BufFrames.ir(buf);
-	real_loc = Clip.kr(loc*bufsize, 0, bufsize);
+	real_loc = Select.kr(relabs % 2, [Clip.kr(loc*bufsize, 0, bufsize), Clip.kr(loc, 0, bufsize)]);
 	rdphsfor = Phasor.ar(del_trig, BufRateScale.kr(buf)*rate, real_loc, bufsize, real_loc);
 	rdphsback = Phasor.ar(del_trig, BufRateScale.kr(buf)*rate, 0, real_loc, real_loc);
 	rdphs = Select.ar(rate >= 0, [rdphsback, rdphsfor]);
@@ -161,8 +161,8 @@ SynthDef(\dxkNobuS, {|buf, t_trig = 1, loc = -1, rate = 1, ramp = 0.001, out = 0
 
 
 
-SynthDef(\dxkNobuStutS, {|buf, t_trig = 1, loc = -1, rate = 1, ramp = 0.001, stutramp = 0.001, stut = 0,
-	maxdelay = 1, stutlen = 0.1, amp = 1, out = 0|
+SynthDef(\dxkNobuStutS, {|buf, t_trig = 1, loc = -1, rate = 1,  stut = 0,
+	maxdelay = 1, stutlen = 0.1, amp = 1, ramp = 0.001, stutramp = 0.001, relabs = 0, out = 0|
 	//stutlen is in real time seconds
 	//regular nobu vars
 	var output, rdphs, rdphsfor, rdphsback, bufsize, trig, del_trig, real_loc, env, gate;
@@ -173,7 +173,7 @@ SynthDef(\dxkNobuStutS, {|buf, t_trig = 1, loc = -1, rate = 1, ramp = 0.001, stu
 	del_trig = TDelay.kr(trig, ramp);
 	gate = SetResetFF.kr(del_trig, trig);
 	bufsize = BufFrames.ir(buf);
-	real_loc = Clip.kr(loc*bufsize, 0, bufsize);
+	real_loc = Select.kr(relabs % 2, [Clip.kr(loc*bufsize, 0, bufsize), Clip.kr(loc, 0, bufsize)]);
 	rdphsfor = Phasor.ar(del_trig, BufRateScale.kr(buf)*rate, real_loc, bufsize, real_loc);
 	rdphsback = Phasor.ar(del_trig, BufRateScale.kr(buf)*rate, 0, real_loc, real_loc);
 	rdphs = Select.ar(rate >= 0, [rdphsback, rdphsfor]);
