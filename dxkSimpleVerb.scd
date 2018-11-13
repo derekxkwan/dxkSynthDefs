@@ -21,7 +21,7 @@ SynthDef(\dxkFreeVerb2, {|in = 10, in2 = 11, out = 0, mix = 0.33, room = 0.5, da
 	Out.ar(out, output)
 }).add;
 
-SynthDef(\dxkGVerbM, {|in = 10, room =  10, revtime = 3, damp = 0.5, inputbw = 0.5, spread = 15, dry = 1, earlyref = 0.7, tail = 0.5, maxroom = 300, amp = 1, in_pan = 0|
+SynthDef(\dxkGVerbM, {|in = 10, room =  10, revtime = 3, damp = 0.5, inputbw = 0.5, spread = 15, dry = 1, earlyref = 0.7, tail = 0.5, maxroom = 300, amp = 1, in_pan = 0, out = 0|
 	var input, input2, output;
 	input = In.ar(in, 1);
 	input = Pan2.ar(input, in_pan);
@@ -29,7 +29,7 @@ SynthDef(\dxkGVerbM, {|in = 10, room =  10, revtime = 3, damp = 0.5, inputbw = 0
 	Out.ar(out, output);
 }).add;
 
-SynthDef(\dxkGVerbS, {|in = 10, room =  10, revtime = 3, damp = 0.5, inputbw = 0.5, spread = 15, dry = 1, earlyref = 0.7, tail = 0.5, maxroom = 300, amp = 1|
+SynthDef(\dxkGVerbS, {|in = 10, room =  10, revtime = 3, damp = 0.5, inputbw = 0.5, spread = 15, dry = 1, earlyref = 0.7, tail = 0.5, maxroom = 300, amp = 1, out = 0|
 	var input, input2, output;
 	input = In.ar(in, 2);
 	output = GVerb.ar(input, room, revtime, damp, inputbw, spread, dry, earlyref, tail, maxroom, amp);
