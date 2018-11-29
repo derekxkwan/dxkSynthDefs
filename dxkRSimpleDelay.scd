@@ -5,7 +5,7 @@ SynthDef(\dxkCombNM, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, decay
 	wetsig = CombL.ar(input, maxdelay, delaytime, decaytime, 1);
 	outsig = (input*dry)+(wetsig*wet);
 	outsig = outsig * amp;
-	Out.ar(out, outsig);
+	ReplaceOut.ar(out, outsig);
 }, [0.5, 0.5, 0.5]).add;
 
 SynthDef(\dxkCombLM, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, decaytime = 1, in = 50, out = 0, amp = 1|
@@ -14,7 +14,7 @@ SynthDef(\dxkCombLM, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, decay
 	wetsig = CombN.ar(input, maxdelay, delaytime, decaytime, 1);
 	outsig = (input*dry)+(wetsig*wet);
 	outsig = outsig * amp;
-	Out.ar(out, outsig);
+	ReplaceOut.ar(out, outsig);
 }, [0.5, 0.5, 0.5]).add;
 
 SynthDef(\dxkCombCM, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, decaytime = 1, in = 50, out = 0, amp = 1|
@@ -23,7 +23,7 @@ SynthDef(\dxkCombCM, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, decay
 	wetsig = CombC.ar(input, maxdelay, delaytime, decaytime, 1);
 	outsig = (input*dry)+(wetsig*wet);
 	outsig = outsig * amp;
-	Out.ar(out, outsig);
+	ReplaceOut.ar(out, outsig);
 }, [0.5, 0.5, 0.5]).add;
 
 
@@ -33,7 +33,7 @@ SynthDef(\dxkCombNS, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, decay
 	wetsig = CombL.ar(input, maxdelay, delaytime, decaytime, 1);
 	outsig = (input*dry)+(wetsig*wet);
 	outsig = outsig * amp;
-	Out.ar(out, outsig);
+	ReplaceOut.ar(out, outsig);
 }, [0.5, 0.5, 0.5]).add;
 
 SynthDef(\dxkCombLS, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, decaytime = 1, in = 50, out = 0, amp = 1|
@@ -42,7 +42,7 @@ SynthDef(\dxkCombLS, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, decay
 	wetsig = CombN.ar(input, maxdelay, delaytime, decaytime, 1);
 	outsig = (input*dry)+(wetsig*wet);
 	outsig = outsig * amp;
-	Out.ar(out, outsig);
+	ReplaceOut.ar(out, outsig);
 }, [0.5, 0.5, 0.5]).add;
 
 SynthDef(\dxkCombCS, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, decaytime = 1, in = 50, out = 0, amp = 1|
@@ -51,7 +51,7 @@ SynthDef(\dxkCombCS, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, decay
 	wetsig = CombC.ar(input, maxdelay, delaytime, decaytime, 1);
 	outsig = (input*dry)+(wetsig*wet);
 	outsig = outsig * amp;
-	Out.ar(out, outsig);
+	ReplaceOut.ar(out, outsig);
 }, [0.5, 0.5, 0.5]).add;
 
 SynthDef(\dxkAllpassNM, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, decaytime = 1, in = 50, out = 0, amp = 1|
@@ -60,7 +60,7 @@ SynthDef(\dxkAllpassNM, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, de
 	wetsig = AllpassL.ar(input, maxdelay, delaytime, decaytime, 1);
 	outsig = (input*dry)+(wetsig*wet);
 	outsig = outsig * amp;
-	Out.ar(out, outsig);
+	ReplaceOut.ar(out, outsig);
 }, [0.5, 0.5, 0.5]).add;
 
 SynthDef(\dxkAllpassLM, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, decaytime = 1, in = 50, out = 0, amp = 1|
@@ -69,7 +69,7 @@ SynthDef(\dxkAllpassLM, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, de
 	wetsig = AllpassN.ar(input, maxdelay, delaytime, decaytime, 1);
 	outsig = (input*dry)+(wetsig*wet);
 	outsig = outsig * amp;
-	Out.ar(out, outsig);
+	ReplaceOut.ar(out, outsig);
 }, [0.5, 0.5, 0.5]).add;
 
 SynthDef(\dxkAllpassCM, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, decaytime = 1, in = 50, out = 0, amp = 1|
@@ -78,7 +78,7 @@ SynthDef(\dxkAllpassCM, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, de
 	wetsig = AllpassC.ar(input, maxdelay, delaytime, decaytime, 1);
 	outsig = (input*dry)+(wetsig*wet);
 	outsig = outsig * amp;
-	Out.ar(out, outsig);
+	ReplaceOut.ar(out, outsig);
 }, [0.5, 0.5, 0.5]).add;
 
 
@@ -88,7 +88,7 @@ SynthDef(\dxkAllpassNS, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, de
 	wetsig = AllpassL.ar(input, maxdelay, delaytime, decaytime, 1);
 	outsig = (input*dry)+(wetsig*wet);
 	outsig = outsig * amp;
-	Out.ar(out, outsig);
+	ReplaceOut.ar(out, outsig);
 }, [0.5, 0.5, 0.5]).add;
 
 SynthDef(\dxkAllpassLS, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, decaytime = 1, in = 50, out = 0, amp = 1|
@@ -97,7 +97,7 @@ SynthDef(\dxkAllpassLS, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, de
 	wetsig = AllpassN.ar(input, maxdelay, delaytime, decaytime, 1);
 	outsig = (input*dry)+(wetsig*wet);
 	outsig = outsig * amp;
-	Out.ar(out, outsig);
+	ReplaceOut.ar(out, outsig);
 }, [0.5, 0.5]).add;
 
 SynthDef(\dxkAllpassCS, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, decaytime = 1, in = 50, out = 0, amp = 1|
@@ -106,5 +106,5 @@ SynthDef(\dxkAllpassCS, {| dry = 1, wet = 0.5, delaytime = 0.2, maxdelay = 1, de
 	wetsig = AllpassC.ar(input, maxdelay, delaytime, decaytime, 1);
 	outsig = (input*dry)+(wetsig*wet);
 	outsig = outsig * amp;
-	Out.ar(out, outsig);
+	ReplaceOut.ar(out, outsig);
 }, [0.5, 0.5]).add;
