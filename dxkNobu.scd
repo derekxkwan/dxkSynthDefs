@@ -283,7 +283,7 @@ SynthDef(\dxkTNobuM, {|buf, t_trig = 1, dur = 0.25, loc = 0, rate = 1, amp = 1, 
 	buf_dur = BufDur.kr(buf) * abs(rate.reciprocal);
 	ask_loc = Select.kr(relabs % 2, [loc, loc/bufsize]);
 	ask_dur = Select.kr(BinaryOpUGen('>=', rate, 0), [ask_loc, 1 - ask_loc]) * buf_dur;
-	clip_dur = Clip.kr(dur, 0, ask_dur);
+	clip_dur = Select.kr(dur > 0, [ask_dur, Clip.kr(dur, 0, ask_dur)]);
 	delay_trig =  DelayN.kr(t_trig, clip_dur, clip_dur);
 	gate = SetResetFF.kr(t_trig, delay_trig);
 	real_loc = Select.kr(relabs % 2, [Clip.kr(loc*bufsize, 0, bufsize), Clip.kr(loc, 0, bufsize)]);
@@ -304,7 +304,7 @@ SynthDef(\dxkTNobuS, {|buf, t_trig = 1, dur = 0.25, loc = 0,  ramp = 0.001, rate
 	buf_dur = BufDur.kr(buf) * abs(rate.reciprocal);
 	ask_loc = Select.kr(relabs % 2, [loc, loc/bufsize]);
 	ask_dur = Select.kr(rate >= 0 , [ask_loc, 1 - ask_loc]) * buf_dur;
-	clip_dur = Clip.kr(dur, 0, ask_dur);
+	clip_dur = Select.kr(dur > 0, [ask_dur, Clip.kr(dur, 0, ask_dur)]);
 	delay_trig = DelayN.kr(t_trig, clip_dur, clip_dur);
 	gate = SetResetFF.kr(t_trig, delay_trig);
 	real_loc = Select.kr(relabs % 2, [Clip.kr(loc*bufsize, 0, bufsize), Clip.kr(loc, 0, bufsize)]);
@@ -346,7 +346,7 @@ SynthDef(\dxkTNobuStutM, {|buf, t_trig = 1, dur = 0, loc = 0, rate = 1, stut = 0
 	buf_dur = BufDur.kr(buf) * abs(rate.reciprocal);
 	ask_loc = Select.kr(relabs % 2, [loc, loc/bufsize]);
 	ask_dur = Select.kr(BinaryOpUGen('>=', rate, 0), [ask_loc, 1 - ask_loc]) * buf_dur;
-	clip_dur = Clip.kr(dur, 0, ask_dur);
+	clip_dur = Select.kr(dur > 0, [ask_dur, Clip.kr(dur, 0, ask_dur)]);
 	delay_trig = DelayN.kr(t_trig, clip_dur, clip_dur);
 	gate = SetResetFF.kr(t_trig, delay_trig);
 	real_loc = Select.kr(relabs % 2, [Clip.kr(loc*bufsize, 0, bufsize), Clip.kr(loc, 0, bufsize)]);
@@ -384,7 +384,7 @@ SynthDef(\dxkTNobuStutS, {|buf, t_trig = 1, dur = 0, loc = 0, rate = 1, stut = 0
 	buf_dur = BufDur.kr(buf) * abs(rate.reciprocal);
 	ask_loc = Select.kr(relabs % 2, [loc, loc/bufsize]);
 	ask_dur = Select.kr(BinaryOpUGen('>=', rate, 0), [ask_loc, 1 - ask_loc]) * buf_dur;
-	clip_dur = Clip.kr(dur, 0, ask_dur);
+	clip_dur = Select.kr(dur > 0, [ask_dur, Clip.kr(dur, 0, ask_dur)]);
 	delay_trig = DelayN.kr(t_trig, clip_dur, clip_dur);
 	gate = SetResetFF.kr(t_trig, delay_trig);
 	real_loc = Select.kr(relabs % 2, [Clip.kr(loc*bufsize, 0, bufsize), Clip.kr(loc, 0, bufsize)]);
