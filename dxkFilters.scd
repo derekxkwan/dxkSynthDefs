@@ -71,14 +71,17 @@ SynthDef(\dxkRingzS, {|in = 10, out = 10, amp = 1, freq = 18000, decay_time = 1|
 }).add;
 
 
-SynthDef(\dxkHLPFM, {|in = 10, out = 10, amp = 1, freq_hi = 18000, freq_lo = 30|
-	var input = HPF.ar(In.ar(in, 1), freq_lo);
-	input = LPF.ar(input, freq_hi, amp);
-	Out.ar(out, input);
+SynthDef(\dxkHLPFM, {|in = 10, out = 0, amp = 1, freq_hi = 18000, freq_lo = 30|
+	var input = In.ar(in, 1);
+	input = HPF.ar(input, freq_lo);
+	input = LPF.ar(input, freq_hi);
+	Out.ar(out, input*amp);
 }).add;
 
-SynthDef(\dxkHLPFS, {|in = 10, out = 10, amp = 1, freq_hi = 18000, freq_lo = 30|
-	var input = HPF.ar(In.ar(in, 2), freq_lo);
-	input = LPF.ar(input, freq_hi, amp);
-	Out.ar(out, input);
+
+SynthDef(\dxkHLPFS, {|in = 10, out = 0, amp = 1, freq_hi = 18000, freq_lo = 30|
+	var input = In.ar(in, 2);
+	input = HPF.ar(input, freq_lo);
+	input = LPF.ar(input, freq_hi);
+	Out.ar(out, input*amp);
 }).add;
