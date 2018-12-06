@@ -133,7 +133,7 @@ SynthDef(\dxkSd3, {|t_trig = 1, basefreq = 150, att = 0.001, len = 0.3, lopfreq 
 
 //adapted from the ryan brown synthdef \cymbal808_ryan from the supercollider-quarks
 //synthdefpool
-SynthDef(\dxkCymb808_1, {|t_trig = 1, basefreq = 205.35, len = 0.25, sustain = 0.5, att = 0.001, out = 0, pan = 0, amp = 1|
+SynthDef(\dxkCymb808, {|t_trig = 1, basefreq = 205.35, len = 0.25, sustain = 0.5, att = 0.001, out = 0, pan = 0, amp = 1|
 	var freqArray, sig1, sig2,env, sig1env, output;
 	freqArray = basefreq * [ 1, 1.4823959094229, 1.800048697346, 2.545458972486, 2.6322863403944, 3.9552471390309 ];
 	sig2 = Pulse.ar(freqArray, 0.55, 0.9);
@@ -150,7 +150,7 @@ SynthDef(\dxkCymb808_1, {|t_trig = 1, basefreq = 205.35, len = 0.25, sustain = 0
 	output = output * env;
 	output = DelayN.ar(output, 0.005, 0.005);
 	output = FreeVerb.ar(output, sustain);
-	DetectSilence.ar(output, doneAction:2);
+	DetectSilence.ar(output, time: 0.01, doneAction:2);
 	output = Pan2.ar(output*amp, pan);
 	Out.ar(out, output);
 }).add;
