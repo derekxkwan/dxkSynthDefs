@@ -23,7 +23,7 @@ SynthDef(\dxkBd2, {|t_trig = 1, basefreq = 55, rq = 0.1, overdrive = 2, samplen 
 	output = Trig.ar(t_trig,samplen/SampleRate.ir);
 	output = BPF.ar(output,basefreq,rq,amp*makeupgain);
 	output = (output * overdrive).tanh;
-	DetectSilence.ar(output, doneAction:2);
+	DetectSilence.ar(output, time: 0.01, doneAction:2);
 	output = Pan2.ar(output*amp, pan);
 	Out.ar(out, output);
 }).add;
