@@ -21,7 +21,7 @@ SynthDef(\dxkClik, {|t_trig = 1, samplen = 1,  amp = 1, pan = 0, out = 0|
 	var output, filtput;
 	output = Trig.ar(t_trig, samplen*SampleDur.ir);
 	output = output * amp;
-	DetectSilence.ar(output, doneAction: 2);
+	DetectSilence.ar(output, time: 0.01, doneAction: 2);
 	output = Pan2.ar(output, pan);
 	Out.ar(out, output);
 }).add;
@@ -31,7 +31,7 @@ SynthDef(\dxkClikFilt, {|t_trig = 1, samplen = 1, freq = 440, rq = 0.1, amp = 1,
 	output = Trig.ar(t_trig, samplen*SampleDur.ir);
 	output = output * amp;
 	output = BPF.ar(output, freq, rq);
-	DetectSilence.ar(output, doneAction: 2);
+	DetectSilence.ar(output, time: 0.01, doneAction: 2);
 	output = Pan2.ar(output, pan);
 	Out.ar(out, output);
 }).add;
