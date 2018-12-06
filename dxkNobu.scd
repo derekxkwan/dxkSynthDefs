@@ -2,14 +2,13 @@
 
 //for use with patterns
 SynthDef(\dxkPNobuM, {|buf, gate = 1, loc = 0, rate = 1, amp = 1, pan = 0,  ramp = 0.001, relabs = 0,  out = 0|
-	var output, rdphs, rdphsfor, rdphsback, bufsize, trig, del_trig, real_loc, env, bufrate;
+	var output, rdphs, bufsize, trig, del_trig, real_loc, env, bufrate, startend;
 	bufsize = BufFrames.ir(buf);
 	bufrate = BufRateScale.kr(buf)*rate;
 	real_loc = Select.kr(relabs % 2, [loc*bufsize, loc]);
 	real_loc = Clip.kr(real_loc, 0, bufsize);
-	rdphsfor = Phasor.ar(0, bufrate, real_loc, bufsize, real_loc);
-	rdphsback = Phasor.ar(0, bufrate, 0, real_loc, real_loc);
-	rdphs = Select.ar(rate >= 0, [rdphsback, rdphsfor]);
+	startend = Select.kr(rate >= 0, [[0, real_loc], [real_loc,bufsize]]);
+	rdphs = Phasor.ar(0, bufrate, startend[0], startend[1], real_loc);
 	env = EnvGen.ar(Env.asr(ramp,1,ramp),gate, doneAction: 2);
 	output = BufRd.ar(1, buf, rdphs);
 	output = output*env*amp;
@@ -18,51 +17,44 @@ SynthDef(\dxkPNobuM, {|buf, gate = 1, loc = 0, rate = 1, amp = 1, pan = 0,  ramp
 }).add;
 
 SynthDef(\dxkPNobuS, {|buf, gate = 1, loc = 0,  ramp = 0.001, rate = 1, amp = 1, pan = 0, relabs = 0, out = 0|
-	var output, rdphsfor,rdphsback, rdphs, bufsize, trig, del_trig, real_loc, env, panclip, panner, panout, bufrate;
+	var output, rdphs, bufsize, trig, del_trig, real_loc, env, panner, panout, bufrate, startend;
 	bufsize = BufFrames.ir(buf);
 	bufrate = BufRateScale.kr(buf) * rate;
 	real_loc = Select.kr(relabs % 2, [loc*bufsize, loc]);
 	real_loc = Clip.kr(real_loc, 0, bufsize);
-	rdphsfor = Phasor.ar(0, bufrate, real_loc, bufsize, real_loc);
-	rdphsback = Phasor.ar(0, bufrate, 0, real_loc, real_loc);
-	rdphs = Select.ar(rate >= 0, [rdphsback, rdphsfor]);
+	startend = Select.kr(rate >= 0, [[0, real_loc], [real_loc,bufsize]]);
+	rdphs = Phasor.ar(0, bufrate, startend[0], startend[1], real_loc);
 	env = EnvGen.ar(Env.asr(ramp,1,ramp),gate, doneAction: 2);
 	output = BufRd.ar(2, buf, rdphs);
 
-	panclip = pan.clip(-1.0,1.0);
-		//l-l, l-r, r-r, r-l
-	panner = Select.ar(BinaryOpUGen('>=', panclip, 0),
-			[
-				K2A.ar([1, 0, panclip + 1, panclip * -1]),
-				K2A.ar([(1 - panclip), panclip, 1, 0])
-			]
-			);
-	panout = 	[
-		(output[0] * panner[0]) +
-		(output[1] * panner[3]),
-		(output[0] * panner[1]) +
-		(output[1] * panner[2])];
 
+	//l -> l: 1 : 1 -> 0
+	//l -> r: 0 : 0 -> 1
+	//r -> r: 0 -> 1 : 1
+	//r -> l: 1->0 : 0
+
+	panner = Clip.kr([ (1 - pan), pan, (1 + pan), (-1 * pan)], 0, 1);
+	panout = [Mix.ar(output * [panner[0], panner[3]]), Mix.ar(output * [panner[1], panner[2]])];
 	
 	output = panout*env*amp;
 	//output = Pan2.ar(output,pan);
 	Out.ar(out,output);
 }).add;
 
+
 SynthDef(\dxkPNobuStutM, {|buf, gate = 1, loc = 0, rate = 1, stut = 0,
 	maxdelay = 1, stutlen = 0.1, amp = 1, pan = 0,  ramp = 0.001,  stutramp = 0.001, relabs = 0, out = 0|
 	//stutlen is in real time seconds
 	//regular nobu vars
-	var output, rdphs, rdphsfor, rdphsback, bufsize, trig, del_trig, real_loc, env, bufrate;
+	var output, rdphs, bufsize, trig, del_trig, real_loc, env, bufrate, startend;
 	//stutter vars
 	var stutout, delptr, clock, stuttrig, stutenv;
 	bufsize = BufFrames.ir(buf);
 	bufrate = BufRateScale.kr(buf)*rate;
 	real_loc = Select.kr(relabs % 2, [loc*bufsize, loc]);
 	real_loc = Clip.kr(real_loc, 0, bufsize);
-	rdphsfor = Phasor.ar(0, bufrate, real_loc, bufsize, real_loc);
-	rdphsback = Phasor.ar(0, bufrate, 0, real_loc, real_loc);
-	rdphs = Select.ar(rate >= 0, [rdphsback, rdphsfor]);
+	startend = Select.kr(rate >= 0, [[0, real_loc], [real_loc,bufsize]]);
+	rdphs = Phasor.ar(0, bufrate, startend[0], startend[1], real_loc);
 	env = EnvGen.ar(Env.asr(ramp,1,ramp),gate, doneAction: 2);
 	output = BufRd.ar(1, buf, rdphs);
 	//now the stuttering stuff
@@ -84,18 +76,17 @@ SynthDef(\dxkPNobuStutS, {|buf, gate = 1, loc = 0, rate = 1, stut = 0,
 	maxdelay = 1, stutlen = 0.1, amp = 1,  ramp = 0.001, stutramp = 0.001, relabs = 0, pan = 0, out = 0|
 	//stutlen is in real time seconds
 	//regular nobu vars
-	var output, rdphs, rdphsfor, rdphsback, bufsize, trig, del_trig, real_loc, env, bufrate;
+	var output, rdphs,bufsize, trig, del_trig, real_loc, env, bufrate, startend;
 	//stutter vars
 	var stutout, delptr, clock, stuttrig, stutenv;
-	var panclip, panout, panner;
+	var panout, panner;
 	
 	bufsize = BufFrames.ir(buf);
 	bufrate = BufRateScale.kr(buf) * rate;
 	real_loc = Select.kr(relabs % 2, [loc*bufsize, loc]);
 	real_loc = Clip.kr(real_loc, 0, bufsize);
-	rdphsfor = Phasor.ar(0, bufrate, real_loc, bufsize, real_loc);
-	rdphsback = Phasor.ar(0, bufrate, 0, real_loc, real_loc);
-	rdphs = Select.ar(rate >= 0, [rdphsback, rdphsfor]);
+	startend = Select.kr(rate >= 0, [[0, real_loc], [real_loc,bufsize]]);
+	rdphs = Phasor.ar(0, bufrate, startend[0], startend[1], real_loc);
 	env = EnvGen.ar(Env.asr(ramp,1,ramp),gate, doneAction: 2);
 	output = BufRd.ar(2, buf, rdphs);
 	//now the stuttering stuff
@@ -107,21 +98,16 @@ SynthDef(\dxkPNobuStutS, {|buf, gate = 1, loc = 0, rate = 1, stut = 0,
 	stutenv = EnvGen.ar(Env.asr(stutramp, 1, stutramp), clock);
 	stutout = DelayL.ar(output, maxdelay, delptr);
 	output = XFade2.ar(output, stutout, Lag.kr(stut*2-1, stutramp));
-
 	
-	panclip = pan.clip(-1.0,1.0);
-		//l-l, l-r, r-r, r-l
-	panner = Select.ar(BinaryOpUGen('>=', panclip, 0),
-			[
-				K2A.ar([1, 0, panclip + 1, panclip * -1]),
-				K2A.ar([(1 - panclip), panclip, 1, 0])
-			]
-			);
-	panout = 	[
-		(output[0] * panner[0]) +
-		(output[1] * panner[3]),
-		(output[0] * panner[1]) +
-		(output[1] * panner[2])];
+
+	//l -> l: 1 : 1 -> 0
+	//l -> r: 0 : 0 -> 1
+	//r -> r: 0 -> 1 : 1
+	//r -> l: 1->0 : 0
+
+	panner = Clip.kr([ (1 - pan), pan, (1 + pan), (-1 * pan)], 0, 1);
+	panout = [Mix.ar(output * [panner[0], panner[3]]), Mix.ar(output * [panner[1], panner[2]])];
+
 
 	
 	output = panout*env*amp;
@@ -133,7 +119,7 @@ SynthDef(\dxkPNobuStutS, {|buf, gate = 1, loc = 0, rate = 1, stut = 0,
 
 //for use outside of patterns
 SynthDef(\dxkNobuM, {|buf, t_trig = 1, loc = -1, rate = 1, out = 0, amp = 1,  ramp = 0.001, relabs = 0|
-	var output, rdphs, rdphsfor, rdphsback, bufsize, trig, del_trig, real_loc, env, gate, bufrate;
+	var output, rdphs, bufsize, trig, del_trig, real_loc, env, gate, bufrate, startend;
 	trig = HPZ1.kr(loc);
 	trig = (trig < 0) + (trig > 0) +t_trig;
 	del_trig = TDelay.kr(trig, ramp);
@@ -142,9 +128,8 @@ SynthDef(\dxkNobuM, {|buf, t_trig = 1, loc = -1, rate = 1, out = 0, amp = 1,  ra
 	real_loc = Select.kr(relabs % 2, [loc*bufsize, loc]);
 	real_loc = Clip.kr(real_loc, 0, bufsize);
 	bufrate = BufRateScale.kr(buf) * rate;
-	rdphsfor = Phasor.ar(del_trig, bufrate, real_loc, bufsize, real_loc);
-	rdphsback = Phasor.ar(del_trig, bufrate, 0, real_loc, real_loc);
-	rdphs = Select.ar(rate >= 0, [rdphsback, rdphsfor]);
+	startend = Select.kr(rate >= 0, [[0, real_loc], [real_loc,bufsize]]);
+	rdphs = Phasor.ar(0, bufrate, startend[0], startend[1], real_loc);
 	env = EnvGen.ar(Env.asr(ramp,1,ramp),gate);
 	output = BufRd.ar(1, buf, rdphs)*env;
 	output = output * env * amp;
@@ -157,7 +142,7 @@ SynthDef(\dxkNobuStutM, {|buf, t_trig = 1, loc = -1, rate = 1, stut = 0,
 	maxdelay = 1, stutlen = 0.1, amp = 1, ramp = 0.001, stutramp = 0.001, relabs = 0, out = 0|
 	//stutlen is in real time seconds
 	//regular nobu vars
-	var output, rdphs, rdphsfor, rdphsback, bufsize, trig, del_trig, real_loc, env, gate, bufrate;
+	var output, rdphs, bufsize, trig, del_trig, real_loc, env, gate, bufrate, startend;
 	//stutter vars
 	var stutout, delptr, clock, stuttrig, stutenv;
 	trig = HPZ1.kr(loc);
@@ -168,9 +153,8 @@ SynthDef(\dxkNobuStutM, {|buf, t_trig = 1, loc = -1, rate = 1, stut = 0,
 	bufrate = BufRateScale.kr(buf) * rate;
 	real_loc = Select.kr(relabs % 2, [loc*bufsize, loc]);
 	real_loc = Clip.kr(real_loc, 0, bufsize);
-	rdphsfor = Phasor.ar(del_trig, bufrate, real_loc, bufsize, real_loc);
-	rdphsback = Phasor.ar(del_trig, bufrate, 0, real_loc, real_loc);
-	rdphs = Select.ar(rate >= 0, [rdphsback, rdphsfor]);
+	startend = Select.kr(rate >= 0, [[0, real_loc], [real_loc,bufsize]]);
+	rdphs = Phasor.ar(0, bufrate, startend[0], startend[1], real_loc);
 	env = EnvGen.ar(Env.asr(ramp,1,ramp),gate);
 	output = BufRd.ar(1, buf, rdphs)*env;
 	//now the stuttering stuff
@@ -190,8 +174,8 @@ SynthDef(\dxkNobuStutM, {|buf, t_trig = 1, loc = -1, rate = 1, stut = 0,
 
 
 SynthDef(\dxkNobuS, {|buf, t_trig = 1, loc = -1, rate = 1, ramp = 0.001, relabs = 0, pan = 0, amp = 1, out = 0|
-	var output, rdphs, rdphsfor, rdphsback, bufsize, trig, del_trig, real_loc, env, gate, bufrate;
-	var panout, panclip, panner;
+	var output, rdphs, bufsize, trig, del_trig, real_loc, env, gate, bufrate, startend;
+	var panout, panner;
 	
 	trig = HPZ1.kr(loc);
 	trig = (trig < 0) + (trig > 0) +t_trig;
@@ -201,29 +185,20 @@ SynthDef(\dxkNobuS, {|buf, t_trig = 1, loc = -1, rate = 1, ramp = 0.001, relabs 
 	bufrate = BufRateScale.kr(buf) * rate;
 	real_loc = Select.kr(relabs % 2, [loc*bufsize, loc]);
 	real_loc = Clip.kr(real_loc, 0, bufsize);
-	rdphsfor = Phasor.ar(del_trig, bufrate, real_loc, bufsize, real_loc);
-	rdphsback = Phasor.ar(del_trig, bufrate, 0, real_loc, real_loc);
-	rdphs = Select.ar(rate >= 0, [rdphsback, rdphsfor]);
+	startend = Select.kr(rate >= 0, [[0, real_loc], [real_loc,bufsize]]);
+	rdphs = Phasor.ar(0, bufrate, startend[0], startend[1], real_loc);
 	env = EnvGen.ar(Env.asr(ramp,1,ramp),gate);
 	output = BufRd.ar(2, buf, rdphs)*env;
 
-	
-	
-	panclip = pan.clip(-1.0,1.0);
-		//l-l, l-r, r-r, r-l
-	panner = Select.ar(BinaryOpUGen('>=', panclip, 0),
-			[
-				K2A.ar([1, 0, panclip + 1, panclip * -1]),
-				K2A.ar([(1 - panclip), panclip, 1, 0])
-			]
-			);
-	panout = 	[
-		(output[0] * panner[0]) +
-		(output[1] * panner[3]),
-		(output[0] * panner[1]) +
-		(output[1] * panner[2])];
+	//l -> l: 1 : 1 -> 0
+	//l -> r: 0 : 0 -> 1
+	//r -> r: 0 -> 1 : 1
+	//r -> l: 1->0 : 0
 
-	
+	panner = Clip.kr([ (1 - pan), pan, (1 + pan), (-1 * pan)], 0, 1);
+	panout = [Mix.ar(output * [panner[0], panner[3]]), Mix.ar(output * [panner[1], panner[2]])];
+
+
 	output = panout*env*amp;
 
 	Out.ar(out, output);
@@ -235,11 +210,11 @@ SynthDef(\dxkNobuStutS, {|buf, t_trig = 1, loc = -1, rate = 1,  stut = 0,
 	maxdelay = 1, stutlen = 0.1, amp = 1, ramp = 0.001, stutramp = 0.001, relabs = 0, pan = 0, out = 0|
 	//stutlen is in real time seconds
 	//regular nobu vars
-	var output, rdphs, rdphsfor, rdphsback, bufsize, trig, del_trig, real_loc, env, gate, bufrate;
+	var output, rdphs,bufsize, trig, del_trig, real_loc, env, gate, bufrate, startend;
 	//stutter vars
 	var stutout, delptr, clock, stuttrig, stutenv;
 
-	var panout, panclip, panner;
+	var panout, panner;
 	trig = HPZ1.kr(loc);
 	trig = (trig < 0) + (trig > 0) +t_trig;
 	del_trig = TDelay.kr(trig, ramp);
@@ -248,9 +223,8 @@ SynthDef(\dxkNobuStutS, {|buf, t_trig = 1, loc = -1, rate = 1,  stut = 0,
 	bufrate = BufRateScale.kr(buf) * rate;
 	real_loc = Select.kr(relabs % 2, [loc*bufsize, loc]);
 	real_loc = Clip.kr(real_loc, 0, bufsize);
-	rdphsfor = Phasor.ar(del_trig, bufrate, real_loc, bufsize, real_loc);
-	rdphsback = Phasor.ar(del_trig, bufrate, 0, real_loc, real_loc);
-	rdphs = Select.ar(rate >= 0, [rdphsback, rdphsfor]);
+	startend = Select.kr(rate >= 0, [[0, real_loc], [real_loc,bufsize]]);
+	rdphs = Phasor.ar(0, bufrate, startend[0], startend[1], real_loc);
 	env = EnvGen.ar(Env.asr(ramp,1,ramp),gate);
 	output = BufRd.ar(2, buf, rdphs)*env;
 	//now the stuttering stuff
@@ -264,22 +238,15 @@ SynthDef(\dxkNobuStutS, {|buf, t_trig = 1, loc = -1, rate = 1,  stut = 0,
 	output = XFade2.ar(output, stutout, Lag.kr(stut*2-1, stutramp));
 
 	
-	
-	panclip = pan.clip(-1.0,1.0);
-		//l-l, l-r, r-r, r-l
-	panner = Select.ar(BinaryOpUGen('>=', panclip, 0),
-			[
-				K2A.ar([1, 0, panclip + 1, panclip * -1]),
-				K2A.ar([(1 - panclip), panclip, 1, 0])
-			]
-			);
-	panout = 	[
-		(output[0] * panner[0]) +
-		(output[1] * panner[3]),
-		(output[0] * panner[1]) +
-		(output[1] * panner[2])];
+	//l -> l: 1 : 1 -> 0
+	//l -> r: 0 : 0 -> 1
+	//r -> r: 0 -> 1 : 1
+	//r -> l: 1->0 : 0
 
-	
+	panner = Clip.kr([ (1 - pan), pan, (1 + pan), (-1 * pan)], 0, 1);
+	panout = [Mix.ar(output * [panner[0], panner[3]]), Mix.ar(output * [panner[1], panner[2]])];
+
+
 	output = panout*env*amp;
 
 	//output = Pan2.ar(output, pan);
@@ -292,7 +259,7 @@ SynthDef(\dxkNobuStutS, {|buf, t_trig = 1, loc = -1, rate = 1,  stut = 0,
 //for triggering
 
 SynthDef(\dxkTNobuM, {|buf, t_trig = 1, dur = 0.25, loc = 0, rate = 1, amp = 1, pan = 0,  ramp = 0.001, relabs = 0,  out = 0|
-	var output, rdphs, rdphsfor, rdphsback, bufsize, trig, del_trig, real_loc, env, bufrate;
+	var output, rdphs,  bufsize, trig, del_trig, real_loc, env, bufrate, startend;
 	var gate, delay_trig, clip_dur, trig_dur, ask_dur, buf_dur;
 	
 	bufsize = BufFrames.ir(buf);
@@ -303,9 +270,8 @@ SynthDef(\dxkTNobuM, {|buf, t_trig = 1, dur = 0.25, loc = 0, rate = 1, amp = 1, 
 	clip_dur = Select.kr(dur > 0, [ask_dur, Clip.kr(dur, 0, ask_dur)]);
 	delay_trig =  DelayN.kr(t_trig, clip_dur, clip_dur);
 	gate = SetResetFF.kr(t_trig, delay_trig);
-	rdphsfor = Phasor.ar(0, bufrate, real_loc, bufsize, real_loc);
-	rdphsback = Phasor.ar(0, bufrate, 0, real_loc, real_loc);
-	rdphs = Select.ar(rate >= 0, [rdphsback, rdphsfor]);
+	startend = Select.kr(rate >= 0, [[0, real_loc], [real_loc,bufsize]]);
+	rdphs = Phasor.ar(0, bufrate, startend[0], startend[1], real_loc);
 	env = EnvGen.ar(Env.asr(ramp,1,ramp),gate, doneAction: 2);
 	output = BufRd.ar(1, buf, rdphs);
 	output = output*env*amp;
@@ -314,7 +280,7 @@ SynthDef(\dxkTNobuM, {|buf, t_trig = 1, dur = 0.25, loc = 0, rate = 1, amp = 1, 
 }).add;
 
 SynthDef(\dxkTNobuS, {|buf, t_trig = 1, dur = 0.25, loc = 0,  ramp = 0.001, rate = 1, amp = 1, pan = 0, relabs = 0, out = 0|
-	var output, rdphsfor,rdphsback, rdphs, bufsize, trig, del_trig, real_loc, env, panclip, panner, panout, bufrate;
+	var output, rdphs, bufsize, trig, del_trig, real_loc, env,  panner, panout, bufrate, startend;
 	var gate, delay_trig, clip_dur, trig_dur, ask_dur, buf_dur;
 	
 	bufsize = BufFrames.ir(buf);
@@ -325,27 +291,21 @@ SynthDef(\dxkTNobuS, {|buf, t_trig = 1, dur = 0.25, loc = 0,  ramp = 0.001, rate
 	clip_dur = Select.kr(dur > 0, [ask_dur, Clip.kr(dur, 0, ask_dur)]);
 	delay_trig = DelayN.kr(t_trig, clip_dur, clip_dur);
 	gate = SetResetFF.kr(t_trig, delay_trig);
-	rdphsfor = Phasor.ar(0, bufrate, real_loc, bufsize, real_loc);
-	rdphsback = Phasor.ar(0, bufrate, 0, real_loc, real_loc);
-	rdphs = Select.ar(rate >= 0, [rdphsback, rdphsfor]);
+	startend = Select.kr(rate >= 0, [[0, real_loc], [real_loc,bufsize]]);
+	rdphs = Phasor.ar(0, bufrate, startend[0], startend[1], real_loc);
 	env = EnvGen.ar(Env.asr(ramp,1,ramp),gate, doneAction: 2);
 	output = BufRd.ar(2, buf, rdphs);
 
-	panclip = pan.clip(-1.0,1.0);
-		//l-l, l-r, r-r, r-l
-	panner = Select.ar(BinaryOpUGen('>=', panclip, 0),
-			[
-				K2A.ar([1, 0, panclip + 1, panclip * -1]),
-				K2A.ar([(1 - panclip), panclip, 1, 0])
-			]
-			);
-	panout = 	[
-		(output[0] * panner[0]) +
-		(output[1] * panner[3]),
-		(output[0] * panner[1]) +
-		(output[1] * panner[2])];
 
-	
+	//l -> l: 1 : 1 -> 0
+	//l -> r: 0 : 0 -> 1
+	//r -> r: 0 -> 1 : 1
+	//r -> l: 1->0 : 0
+
+	panner = Clip.kr([ (1 - pan), pan, (1 + pan), (-1 * pan)], 0, 1);
+	panout = [Mix.ar(output * [panner[0], panner[3]]), Mix.ar(output * [panner[1], panner[2]])];
+
+
 	output = panout*env*amp;
 	//output = Pan2.ar(output,pan);
 	Out.ar(out,output);
@@ -355,7 +315,7 @@ SynthDef(\dxkTNobuStutM, {|buf, t_trig = 1, dur = 0, loc = 0, rate = 1, stut = 0
 	maxdelay = 1, stutlen = 0.1, amp = 1, pan = 0,  ramp = 0.001,  stutramp = 0.001, relabs = 0, out = 0|
 	//stutlen is in real time seconds
 	//regular nobu vars
-	var output, rdphs, rdphsfor, rdphsback, bufsize, trig, del_trig, real_loc, env, bufrate;
+	var output, rdphs,  bufsize, trig, del_trig, real_loc, env, bufrate, startend;
 	//stutter vars
 	var stutout, delptr, clock, stuttrig, stutenv;
 	var gate, delay_trig, clip_dur, trig_dur, ask_dur, buf_dur;
@@ -368,10 +328,8 @@ SynthDef(\dxkTNobuStutM, {|buf, t_trig = 1, dur = 0, loc = 0, rate = 1, stut = 0
 	clip_dur = Select.kr(dur > 0, [ask_dur, Clip.kr(dur, 0, ask_dur)]);
 	delay_trig = DelayN.kr(t_trig, clip_dur, clip_dur);
 	gate = SetResetFF.kr(t_trig, delay_trig);
-
-	rdphsfor = Phasor.ar(0, bufrate, real_loc, bufsize, real_loc);
-	rdphsback = Phasor.ar(0, bufrate, 0, real_loc, real_loc);
-	rdphs = Select.ar(rate >= 0, [rdphsback, rdphsfor]);
+	startend = Select.kr(rate >= 0, [[0, real_loc], [real_loc,bufsize]]);
+	rdphs = Phasor.ar(0, bufrate, startend[0], startend[1], real_loc);
 	env = EnvGen.ar(Env.asr(ramp,1,ramp),gate, doneAction: 2);
 	output = BufRd.ar(1, buf, rdphs);
 	//now the stuttering stuff
@@ -393,10 +351,10 @@ SynthDef(\dxkTNobuStutS, {|buf, t_trig = 1, dur = 0, loc = 0, rate = 1, stut = 0
 	maxdelay = 1, stutlen = 0.1, amp = 1,  ramp = 0.001, stutramp = 0.001, relabs = 0, pan = 0, out = 0|
 	//stutlen is in real time seconds
 	//regular nobu vars
-	var output, rdphs, rdphsfor, rdphsback, bufsize, trig, del_trig, real_loc, env, bufrate;
+	var output, rdphs,  bufsize, trig, del_trig, real_loc, env, bufrate, startend;
 	//stutter vars
 	var stutout, delptr, clock, stuttrig, stutenv;
-	var panclip, panout, panner;
+	var panout, panner;
 	var gate, delay_trig, clip_dur, trig_dur, ask_dur, buf_dur;
 
 	bufsize = BufFrames.ir(buf);
@@ -407,9 +365,8 @@ SynthDef(\dxkTNobuStutS, {|buf, t_trig = 1, dur = 0, loc = 0, rate = 1, stut = 0
 	clip_dur = Select.kr(dur > 0, [ask_dur, Clip.kr(dur, 0, ask_dur)]);
 	delay_trig = DelayN.kr(t_trig, clip_dur, clip_dur);
 	gate = SetResetFF.kr(t_trig, delay_trig);
-	rdphsfor = Phasor.ar(0, bufrate, real_loc, bufsize, real_loc);
-	rdphsback = Phasor.ar(0, bufrate, 0, real_loc, real_loc);
-	rdphs = Select.ar(rate >= 0, [rdphsback, rdphsfor]);
+	startend = Select.kr(rate >= 0, [[0, real_loc], [real_loc,bufsize]]);
+	rdphs = Phasor.ar(0, bufrate, startend[0], startend[1], real_loc);
 	env = EnvGen.ar(Env.asr(ramp,1,ramp),gate, doneAction: 2);
 	output = BufRd.ar(2, buf, rdphs);
 	//now the stuttering stuff
@@ -422,20 +379,13 @@ SynthDef(\dxkTNobuStutS, {|buf, t_trig = 1, dur = 0, loc = 0, rate = 1, stut = 0
 	stutout = DelayL.ar(output, maxdelay, delptr);
 	output = XFade2.ar(output, stutout, Lag.kr(stut*2-1, stutramp));
 
-	
-	panclip = pan.clip(-1.0,1.0);
-		//l-l, l-r, r-r, r-l
-	panner = Select.ar(BinaryOpUGen('>=', panclip, 0),
-			[
-				K2A.ar([1, 0, panclip + 1, panclip * -1]),
-				K2A.ar([(1 - panclip), panclip, 1, 0])
-			]
-			);
-	panout = 	[
-		(output[0] * panner[0]) +
-		(output[1] * panner[3]),
-		(output[0] * panner[1]) +
-		(output[1] * panner[2])];
+	//l -> l: 1 : 1 -> 0
+	//l -> r: 0 : 0 -> 1
+	//r -> r: 0 -> 1 : 1
+	//r -> l: 1->0 : 0
+
+	panner = Clip.kr([ (1 - pan), pan, (1 + pan), (-1 * pan)], 0, 1);
+	panout = [Mix.ar(output * [panner[0], panner[3]]), Mix.ar(output * [panner[1], panner[2]])];
 
 	
 	output = panout*env*amp;
