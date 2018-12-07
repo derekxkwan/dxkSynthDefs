@@ -19,10 +19,11 @@ SynthDef(\dxkBd1, {|t_trig = 1, basefreq = 45, overdrive = 2, len=0.5, att = 0.0
 }).add;
 
 SynthDef(\dxkBd2, {|t_trig = 1, basefreq = 55, rq = 0.1, overdrive = 2, samplen = 100, amp = 1, pan = 0, out = 0|
-	var output,makeupgain = 3.5;
+	var output, failsafe, makeupgain = 3.5;
 	output = Trig.ar(t_trig,samplen/SampleRate.ir);
 	output = BPF.ar(output,basefreq,rq,amp*makeupgain);
 	output = (output * overdrive).tanh;
+	failsafe = FreeSelf.kr(Trig.kr(t_trig) * (amp <= 0));
 	DetectSilence.ar(output, time: 0.1, doneAction:2);
 	output = Pan2.ar(output*amp, pan);
 	Out.ar(out, output);
@@ -134,7 +135,7 @@ SynthDef(\dxkSd3, {|t_trig = 1, basefreq = 150, att = 0.001, len = 0.3, lopfreq 
 //adapted from the ryan brown synthdef \cymbal808_ryan from the supercollider-quarks
 //synthdefpool
 SynthDef(\dxkCymb808, {|t_trig = 1, basefreq = 205.35, len = 0.25, sustain = 0.5, att = 0.001, out = 0, pan = 0, amp = 1|
-	var freqArray, sig1, sig2,env, sig1env, output;
+	var freqArray, sig1, sig2,env, sig1env, output, failsafe;
 	freqArray = basefreq * [ 1, 1.4823959094229, 1.800048697346, 2.545458972486, 2.6322863403944, 3.9552471390309 ];
 	sig2 = Pulse.ar(freqArray, 0.55, 0.9);
 	sig2 = Mix.ar(sig2);
@@ -150,6 +151,7 @@ SynthDef(\dxkCymb808, {|t_trig = 1, basefreq = 205.35, len = 0.25, sustain = 0.5
 	output = output * env;
 	output = DelayN.ar(output, 0.005, 0.005);
 	output = FreeVerb.ar(output, sustain);
+	failsafe = FreeSelf.kr(Trig.kr(t_trig) * (amp <= 0));
 	DetectSilence.ar(output, time: 0.01, doneAction:2);
 	output = Pan2.ar(output*amp, pan);
 	Out.ar(out, output);

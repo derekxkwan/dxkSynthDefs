@@ -18,19 +18,21 @@ SynthDef(\dxkDtmf, {|number = 0, mul = 1, pan = 0, out = 0, gate = 1, att = 0.00
 	Out.ar(out, output)}).add;
 
 SynthDef(\dxkClik, {|t_trig = 1, samplen = 1,  amp = 1, pan = 0, out = 0|
-	var output, filtput;
+	var output, failsafe, filtput;
 	output = Trig.ar(t_trig, samplen*SampleDur.ir);
 	output = output * amp;
+	failsafe = FreeSelf.kr(Trig.kr(t_trig) * (amp <= 0));
 	DetectSilence.ar(output, time: 0.01, doneAction: 2);
 	output = Pan2.ar(output, pan);
 	Out.ar(out, output);
 }).add;
 
 SynthDef(\dxkClikFilt, {|t_trig = 1, samplen = 1, freq = 440, rq = 0.1, amp = 1, pan = 0, out = 0|
-	var output, filtput;
+	var output, failsafe, filtput;
 	output = Trig.ar(t_trig, samplen*SampleDur.ir);
 	output = output * amp;
 	output = BPF.ar(output, freq, rq);
+	failsafe = FreeSelf.kr(Trig.kr(t_trig) * (amp <= 0));
 	DetectSilence.ar(output, time: 0.1, doneAction: 2);
 	output = Pan2.ar(output, pan);
 	Out.ar(out, output);
