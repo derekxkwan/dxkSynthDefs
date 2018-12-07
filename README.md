@@ -1,5 +1,6 @@
 # DxkSynthDefs
-some synth defs for SuperCollider
+
+some synth defs for SuperCollider (gpl v 3)
 
 (note: files/synthdefs with dxkX instead of plain dxk use XOut, usually for effects synthdefs)
 
