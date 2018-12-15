@@ -70,59 +70,73 @@ SynthDef(\dxkFmSd1, {|t_trig = 1, basefreq = 110.8, att = 0.003, dec = 0.1602, r
 	Out.ar(out, output);
 }).add;
 
-SynthDef(\dxkFbDellopNM, {|in = 10, maxdelay = 1, delaytime =1, fb = 0.75, lop = 1000, dry = 1, wet = 1, amp = 1, out = 0, drylag = 0.01, wetlag = 0.01, amplag = 0.01|
+SynthDef(\dxkFbDellopNM, {
+	|in = 10, maxdelay = 1, delaytime =1, fb = 0.75, lop = 1000, dry = 1, wet = 1, amp = 1, out = 0, drylag = 0.01, wetlag = 0.01, amplag = 0.01, delaylag = 0.01|
 	var input = In.ar(in, 1);
 	var realdry = Lag.ar(K2A.ar(dry), drylag);
 	var realwet = Lag.ar(K2A.ar(wet), wetlag);
 	var realamp = Lag.ar(K2A.ar(amp), amplag);
-	var output = DxkFbdellopN.ar(input, maxdelay, delaytime, fb, lop, realdry, realwet);
+	var realdelay = Lag.ar(K2A.ar(delaytime), delaylag);
+	var output = DxkFbdellopN.ar(input, maxdelay, realdelay, fb, lop, realdry, realwet);
+
 	Out.ar(out, output * realamp);
 }).add;
 
-SynthDef(\dxkFbDellopLM, {|in = 10, maxdelay = 1, delaytime =1, fb = 0.75, lop = 1000, dry = 1, wet = 1, amp = 1, out = 0, drylag = 0.01, wetlag = 0.01, amplag = 0.01|
+SynthDef(\dxkFbDellopLM, {|in = 10, maxdelay = 1, delaytime =1, fb = 0.75, lop = 1000, dry = 1, wet = 1, amp = 1, out = 0, drylag = 0.01, wetlag = 0.01, amplag = 0.01, delaylag = 0.01|
 	var input = In.ar(in, 1);
 	var realdry = Lag.ar(K2A.ar(dry), drylag);
 	var realwet = Lag.ar(K2A.ar(wet), wetlag);
 	var realamp = Lag.ar(K2A.ar(amp), amplag);
-	var output = DxkFbdellopL.ar(input, maxdelay, delaytime, fb, lop, realdry, realwet);
+	var realdelay = Lag.ar(K2A.ar(delaytime), delaylag);
+	var output = DxkFbdellopL.ar(input, maxdelay, realdelay, fb, lop, realdry, realwet);
+
 	Out.ar(out, output * realamp);
 }).add;
 
 
-SynthDef(\dxkFbDellopCM, {|in = 10, maxdelay = 1, delaytime =1, fb = 0.75, lop = 1000, dry = 1, wet = 1, amp = 1, out = 0, drylag = 0.01, wetlag = 0.01, amplag = 0.01|
+SynthDef(\dxkFbDellopCM, {|in = 10, maxdelay = 1, delaytime =1, fb = 0.75, lop = 1000, dry = 1, wet = 1, amp = 1, out = 0, drylag = 0.01, wetlag = 0.01, amplag = 0.01, delaylag = 0.01|
 	var input = In.ar(in, 1);
 	var realdry = Lag.ar(K2A.ar(dry), drylag);
 	var realwet = Lag.ar(K2A.ar(wet), wetlag);
 	var realamp = Lag.ar(K2A.ar(amp), amplag);
-	var output = DxkFbdellopC.ar(input, maxdelay, delaytime, fb, lop, realdry, realwet);
+	var realdelay = Lag.ar(K2A.ar(delaytime), delaylag);
+	var output = DxkFbdellopC.ar(input, maxdelay, realdelay, fb, lop, realdry, realwet);
+
 	Out.ar(out, output * realamp);
 }).add;
 
 
-SynthDef(\dxkFbDellopNS, {|in = 10, maxdelay = 1, delaytime =1, fb = 0.75, lop = 1000, dry = 1, wet = 1, amp = 1, out = 0, drylag = 0.01, wetlag = 0.01, amplag = 0.01|
+SynthDef(\dxkFbDellopNS, {|in = 10, maxdelay = 1, delaytime =1, fb = 0.75, lop = 1000, dry = 1, wet = 1, amp = 1, out = 0, drylag = 0.01, wetlag = 0.01, amplag = 0.01, delaylag = 0.01|
 	var input = In.ar(in, 2);
 	var realdry = Lag.ar(K2A.ar(dry), drylag);
 	var realwet = Lag.ar(K2A.ar(wet), wetlag);
 	var realamp = Lag.ar(K2A.ar(amp), amplag);
-	var output = DxkFbdellopN.ar(input, maxdelay, delaytime, fb, lop, realdry, realwet);
+	var realdelay = Lag.ar(K2A.ar(delaytime), delaylag);
+	var output = DxkFbdellopN.ar(input, maxdelay, realdelay, fb, lop, realdry, realwet);
+
 	Out.ar(out, output * realamp);
 }).add;
 
-SynthDef(\dxkFbDellopLS, {|in = 10, maxdelay = 1, delaytime =1, fb = 0.75, lop = 1000, dry = 1, wet = 1, amp = 1, out = 0, drylag = 0.01, wetlag = 0.01, amplag = 0.01|
+SynthDef(\dxkFbDellopLS, {
+	|in = 10, maxdelay = 1, delaytime =1, fb = 0.75, lop = 1000, dry = 1, wet = 1, amp = 1, out = 0, drylag = 0.01, wetlag = 0.01, amplag = 0.01, delaylag = 0.01|
 	var input = In.ar(in, 2);
 	var realdry = Lag.ar(K2A.ar(dry), drylag);
 	var realwet = Lag.ar(K2A.ar(wet), wetlag);
 	var realamp = Lag.ar(K2A.ar(amp), amplag);
-	var output = DxkFbdellopL.ar(input, maxdelay, delaytime, fb, lop, realdry, realwet);
+	var realdelay = Lag.ar(K2A.ar(delaytime), delaylag);
+	var output = DxkFbdellopL.ar(input, maxdelay, realdelay, fb, lop, realdry, realwet);
+
 	Out.ar(out, output * realamp);
 }).add;
 
 
-SynthDef(\dxkFbDellopCS, {|in = 10, maxdelay = 1, delaytime =1, fb = 0.75, lop = 1000, dry = 1, wet = 1, amp = 1, out = 0, drylag = 0.01, wetlag = 0.01, amplag = 0.01|
+SynthDef(\dxkFbDellopCS, {
+	|in = 10, maxdelay = 1, delaytime =1, fb = 0.75, lop = 1000, dry = 1, wet = 1, amp = 1, out = 0, drylag = 0.01, wetlag = 0.01, amplag = 0.01, delaylag = 0.01|
 	var input = In.ar(in, 2);
 	var realdry = Lag.ar(K2A.ar(dry), drylag);
 	var realwet = Lag.ar(K2A.ar(wet), wetlag);
 	var realamp = Lag.ar(K2A.ar(amp), amplag);
-	var output = DxkFbdellopC.ar(input, maxdelay, delaytime, fb, lop, realdry, realwet);
+	var realdelay = Lag.ar(K2A.ar(delaytime), delaylag);
+	var output = DxkFbdellopC.ar(input, maxdelay, realdelay, fb, lop, realdry, realwet);
 	Out.ar(out, output * realamp);
 }).add;
