@@ -59,7 +59,7 @@ SynthDef(\dxkHh1, {|t_trig = 1, basefreq = 40,  att = 0.001, len = 0.1, rq = 0.1
 	env = EnvGen.ar(Env.perc(att, len, amp), t_trig, doneAction: 2);
 	output = output *env;
 	output = Pan2.ar(output, pan);
-	Out.ar(out, output);
+	Out.ar(out, output * (amp * 3));
 }).add;
 
 
@@ -227,8 +227,8 @@ SynthDef(\dxkCymb808, {|t_trig = 1, basefreq = 205.35, len = 0.25, sustain = 0.5
 	sig1 = Pulse.ar(freqArray, 0.5);
 	sig1 = Mix.ar(sig1);
 	sig1 = ( BinaryOpUGen('==', sig1, 6) * 0.6) + ( BinaryOpUGen('==', sig1, 2)*0.2)+( BinaryOpUGen('==', sig1, 1)*0.9);
-	sig1env = EnvGen.ar(Env([1.0, 1.0, 0.6], [att, len], -4));
-	env = EnvGen.ar(Env([1.0, 0.4, 0], [att, len, 0.05], -4));
+	sig1env = EnvGen.ar(Env([1.0, 1.0, 0.6], [att, len], -4), t_trig);
+	env = EnvGen.ar(Env([1.0, 0.4, 0], [att, len, 0.05], -4), t_trig);
 	output = sig1 + sig2;
 	output = SOS.ar(output, 0.175812, 0.351623, 0.175812, 0.834059, -0.537305);
 	output = SOS.ar(output, 0.669886, -1.33977, 0.669886, 0.968752, -0.710791);
@@ -246,13 +246,13 @@ SynthDef(\dxkCymb808, {|t_trig = 1, basefreq = 205.35, len = 0.25, sustain = 0.5
 //adapted from ryan brown's sc-users 2007-08-25, retrieved from the synthdefpool repo
 //reintroduced use of baseFreq and redefined time to remove time scaling
 
-SynthDef(\dxkCymb808_2, {|out=0, freq = 300, time = 0.25, amp=0.1|
+SynthDef(\dxkCymb808_2, {|t_trig = 1, out=0, basefreq = 300, len = 0.25, amp=1, pan = 0|
 
 
-	var freqs = freq * [ 1, 1.4823959094229, 1.800048697346, 2.545458972486, 2.6322863403944, 3.9552471390309 ];
+	var freqs = basefreq * [ 1, 1.4823959094229, 1.800048697346, 2.545458972486, 2.6322863403944, 3.9552471390309 ];
 	var signal, pulseEnv;
 
-	pulseEnv = EnvGen.ar(Env.new([1.0, 0.6], [time], [-0.5]));
+	pulseEnv = EnvGen.ar(Env([1.0, 0.6], [len], [-0.5]), t_trig);
 	signal = Mix.new(LFPulse.ar(freqs * 4.09));
 	signal = (BinaryOpUGen('==', signal, 6.0) * 0.6) + (BinaryOpUGen('==', signal, 2.0) * 0.2) + (BinaryOpUGen('==', signal, 1.0) * 0.9); // XOR
  	signal = (signal * pulseEnv) + (Mix.new(LFPulse.ar(freqs, width:0.55)) * 0.9);
@@ -261,15 +261,16 @@ SynthDef(\dxkCymb808_2, {|out=0, freq = 300, time = 0.25, amp=0.1|
 	signal = RHPF.ar(signal, 6800, 1.5);
 	signal = RHPF.ar(signal, 1200, 1.5);
 	signal = signal + FreeVerb.ar(signal);
-	signal = signal * EnvGen.ar(Env.new([0, 1, 0.4, 0, 0], [0.002, time, 0.05, 0.5], [0, -0.5, 0, -50]), doneAction:2);
+	signal = signal * EnvGen.ar(Env([0, 1, 0.4, 0, 0], [0.002, len, 0.05, 0.5], [0, -0.5, 0, -50]), t_trig, doneAction:2);
 	signal = [signal, DelayN.ar(signal, 0.005, 0.005)];
-	OffsetOut.ar(out, signal*4*amp);
+	signal = Pan2.ar(signal, pan, amp * 0.4);
+	Out.ar(out, signal);
 }).add;
 
 
 //fm-gong from http://varioussmallfires.blogspot.ca/2012/01/supercollider-gong.html
 //but with some tweaks for panning, etc and matrixing variables
-SynthDef(\dxkGong1, {|freq = 100, amp = 1, dr = 1, out = 0, pan = 0|
+SynthDef(\dxkGong1, {|t_trig = 1, freq = 100, amp = 1, dr = 1, out = 0, pan = 0|
 
 	var modsig, modf = freq * [1.16, 3.14, 1.005];
 	var idx = [[0.01, 0.3],[0.01,0.38], [0.01, 0.5]] * modf;
@@ -280,20 +281,20 @@ SynthDef(\dxkGong1, {|freq = 100, amp = 1, dr = 1, out = 0, pan = 0|
 	lfo = SinOsc.ar(3, 0, XLine.kr(freq*0.005, freq*0.05, dr));
 
 	modenv[0] = EnvGen.kr(
-		Env(levels: [0,1,1,0], times: [0.75*dr, 0.24*dr, 0.01*dr]),
+		Env(levels: [0,1,1,0], times: [0.75*dr, 0.24*dr, 0.01*dr]), t_trig,
 		doneAction: 2);
 
 	modenv[1] = EnvGen.kr(
-		Env(levels: [0,1,0], times: [0.02*dr, 0.98*dr]),
+		Env(levels: [0,1,0], times: [0.02*dr, 0.98*dr]), t_trig,
 		doneAction: 2);
 
 	modenv[2] = EnvGen.kr(
-		Env(levels: [ 0, 0.3, 1, 0.5, 0], times: [0.15 * dr, 0.15 *dr, 0.45*dr, 0.25*dr]),
+		Env(levels: [ 0, 0.3, 1, 0.5, 0], times: [0.15 * dr, 0.15 *dr, 0.45*dr, 0.25*dr]), t_trig,
 		doneAction: 2);
 
 	// Exp curve...
 	ampenv = EnvGen.kr(
-		Env(levels: [ 0, 1, 0.001], times: [0.002, dr - 0.002], curve: \exp),
+		Env(levels: [ 0, 1, 0.001], times: [0.002, dr - 0.002], curve: \exp), t_trig,
 		doneAction: 2);
 
 	modsig = Mix.new(SinOsc.ar(modf) * ((idx + idxscaler)*modenv));
@@ -319,7 +320,7 @@ SynthDef(\dxkClap1, {	|t_trig = 1, rel = 0.3, hip1 = 600, bp1 = 2000, brq1 = 3, 
 		env2curve = [0, -4];
 
 	    env1 = EnvGen.ar(Env.new(env1lvl, env1time, env1curve), t_trig); //attack
-     	env2 = EnvGen.ar(Env.new(env2lvl, env2time, env2curve), doneAction:2); //release
+     	env2 = EnvGen.ar(Env.new(env2lvl, env2time, env2curve), t_trig, doneAction:2); //release
 
 		noise1 = WhiteNoise.ar(env1);
 		noise1 = HPF.ar(noise1, hip1);
@@ -336,4 +337,23 @@ SynthDef(\dxkClap1, {	|t_trig = 1, rel = 0.3, hip1 = 600, bp1 = 2000, brq1 = 3, 
 		Out.ar(out, output);
 }).add;
 
+//808-ish cowbell by p. dupuis
 
+SynthDef(\dxkCowbell1, {
+    arg out=0, amp=0.3, gate=1, basefreq=540, pan=0.0;
+    var sig, env;
+
+    sig = Pulse.ar( basefreq * [ 1, 1.5085 ], [ 0.565, 0.445 ], [ 0.4, 0.6 ] ).distort;
+    env = EnvGen.ar(
+            Env(
+                [ 0, 0.05, 1, 0.1, 0 ], [ 0.003, 0.002, 0.05, 0.5 ], [2, -4, -4, -4]
+            ),
+        gate: gate,
+        timeScale: [ 1.0, 1.5 ],
+        doneAction: 2
+        );
+    sig = Mix( sig * env );
+    sig = BPF.ar( sig, basefreq * 2, 1.808 );
+
+    Out.ar( out, Pan2.ar( sig, pan, amp ) );
+}).add;
