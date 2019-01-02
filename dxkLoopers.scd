@@ -12,7 +12,7 @@ SynthDef(\dxkLooperM2S, {|recplay = 0, buf, writelevel = 1, overwrite = 0, ramp 
 	RecordBuf.ar(input*recenv, buf, 0, writelevel, overwrite, recording, 0, rectrig);
 	
 	//record loop length
-	looplen = Timer.kr(rectrig+recofftrig);
+	looplen = Clip.kr(Timer.kr(rectrig+recofftrig), 0, BufDur.kr(buf));
 	
 	playing = BinaryOpUGen('==', recplay, 2);
 	playtrig = Trig.kr(playing - 0.5);
@@ -47,7 +47,7 @@ SynthDef(\dxkLooperS2S, {|recplay = 0, buf, writelevel = 1, overwrite = 0, ramp 
 	RecordBuf.ar(input*recenv, buf, 0, writelevel, overwrite, recording, 0, rectrig);
 	
 	//record loop length
-	looplen = Timer.kr(rectrig+recofftrig);
+	looplen = Clip.kr(Timer.kr(rectrig+recofftrig), 0, BufDur.kr(buf));
 	
 	playing = BinaryOpUGen('==', recplay, 2);
 	playtrig = Trig.kr(playing - 0.5);
