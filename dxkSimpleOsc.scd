@@ -260,3 +260,63 @@ SynthDef(\dxkSin2Sine, {|t_trig = 1, out = 0, freq = 440, detune = 0.01, amp = 1
 	Out.ar(out,sig*env);
 	}).add;
 
+
+
+// noise
+
+SynthDef(\dxkWhiteNoiseBP, {
+	arg out = 0, amp = 1, rq = 1, freq = 440, pan = 0, gate = 1, att = 0.01, rel = 0.01, curve = -4;
+	var env = EnvGen.ar(Env.asr(att, 1, rel, curve), gate, doneAction: 2);
+	var noise = WhiteNoise.ar();
+	noise = BPF.ar(noise, freq, rq);
+	noise = Pan2.ar(noise, pan, amp);
+	Out.ar(out, noise*env);
+}).add;
+
+SynthDef(\dxkPinkNoiseBP, {
+	arg out = 0, amp = 1, rq = 1, freq = 440, pan = 0, gate = 1, att = 0.01, rel = 0.01, curve = -4;
+	var env = EnvGen.ar(Env.asr(att, 1, rel, curve), gate, doneAction: 2);
+	var noise = PinkNoise.ar();
+	noise = BPF.ar(noise, freq, rq);
+	noise = Pan2.ar(noise, pan, amp);
+	Out.ar(out, noise*env);
+}).add;
+
+SynthDef(\dxkBrownNoiseBP, {
+	arg out = 0, amp = 1, rq = 1, freq = 440, pan = 0, gate = 1, att = 0.01, rel = 0.01, curve = -4;
+	var env = EnvGen.ar(Env.asr(att, 1, rel, curve), gate, doneAction: 2);
+	var noise = BrownNoise.ar();
+	noise = BPF.ar(noise, freq, rq);
+	noise = Pan2.ar(noise, pan, amp);
+	Out.ar(out, noise*env);
+}).add;
+
+SynthDef(\dxkWhiteNoiseHL, {
+	arg out = 0, amp = 1, lop = 20000, hip = 0, pan = 0, att = 0.01, rel = 0.01, curve = -4, gate = 1;
+	var env = EnvGen.ar(Env.asr(att, 1, rel, curve), gate, doneAction: 2);
+	var noise = WhiteNoise.ar();
+	noise = LPF.ar(noise, lop);
+	noise = HPF.ar(noise, hip);
+	noise = Pan2.ar(noise, pan, amp);
+	Out.ar(out, noise*env);
+}).add;
+
+SynthDef(\dxkBrownNoiseHL, {
+	arg out = 0, amp = 1, lop = 20000, hip = 0, pan = 0, att = 0.01, rel = 0.01, curve = -4, gate = 1;
+	var env = EnvGen.ar(Env.asr(att, 1, rel, curve), gate, doneAction: 2);
+	var noise = BrownNoise.ar();
+	noise = LPF.ar(noise, lop);
+	noise = HPF.ar(noise, hip);
+	noise = Pan2.ar(noise, pan, amp);
+	Out.ar(out, noise*env);
+}).add;
+
+SynthDef(\dxkPinkNoiseHL, {
+	arg out = 0, amp = 1, lop = 20000, hip = 0, pan = 0, att = 0.01, rel = 0.01, curve = -4, gate = 1;
+	var env = EnvGen.ar(Env.asr(att, 1, rel, curve), gate, doneAction: 2);
+	var noise = PinkNoise.ar();
+	noise = LPF.ar(noise, lop);
+	noise = HPF.ar(noise, hip);
+	noise = Pan2.ar(noise, pan, amp);
+	Out.ar(out, noise*env);
+}).add;
