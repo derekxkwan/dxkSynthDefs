@@ -193,3 +193,40 @@ SynthDef(\dxkDecimS, {|bits = 24, downsamp = 1, amp =1, in = 10, out = 0|
 	output = Decimator.ar(input, SampleRate.ir/downsamp, bits, amp);
 	Out.ar(out, output);
 }).add;
+
+SynthDef(\dxkMungerM, {|bits = 24, downsamp = 1, amp =1, pregain = 1, in = 10, out = 0|
+	var input, output;
+	input = In.ar(in, 1);
+	input = (input * pregain).tanh;
+	output = Decimator.ar(input, SampleRate.ir/downsamp, bits, amp);
+	Out.ar(out, output);
+}).add;
+
+SynthDef(\dxkMungerS, {|bits = 24, downsamp = 1, amp =1, pregain = 1, in = 10, out = 0|
+	var input, output;
+	input = In.ar(in, 2);
+	input = (input * pregain).tanh;
+	output = Decimator.ar(input, SampleRate.ir/downsamp, bits, amp);
+	Out.ar(out, output);
+}).add;
+
+
+SynthDef(\dxkMungerFM, {|bits = 24, downsamp = 1, amp =1, pregain = 1, in = 10, lop = 20000, hip = 0, out = 0|
+	var input, output;
+	input = In.ar(in, 1);
+	input = (input * pregain).tanh;
+	output = Decimator.ar(input, SampleRate.ir/downsamp, bits);
+	output = HPF.ar(LPF.ar(output, lop), hip);
+	Out.ar(out, output * amp);
+}).add;
+
+SynthDef(\dxkMungerFS, {|bits = 24, downsamp = 1, amp =1, pregain = 1, in = 10, lop = 20000, hip = 0, out = 0|
+	var input, output;
+	input = In.ar(in, 2);
+	input = (input * pregain).tanh;
+	output = Decimator.ar(input, SampleRate.ir/downsamp, bits);
+	output = HPF.ar(LPF.ar(output, lop), hip);
+	Out.ar(out, output * amp);
+}).add;
+
+
