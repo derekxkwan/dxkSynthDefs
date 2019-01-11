@@ -171,8 +171,8 @@ SynthDef(\dxkCompM, {|in = 10, ctrl = 10, thresh = 0.99, slopeBelow = 1, slopeAb
 SynthDef(\dxkCompS, {|in = 10, ctrl = 10, thresh = 0.99, slopeBelow = 1, slopeAbove = 0.33, clampTime = 0.01, relaxTime = 0.01, out = 0, amp = 1|
 
 	var input, control;
-	input = In.ar(in, 1);
-	control = In.ar(ctrl, 1);
+	input = In.ar(in, 2);
+	control = In.ar(ctrl, 2);
 	input = Compander.ar(input, control, thresh, slopeBelow, slopeAbove, clampTime, relaxTime, amp);
 	Out.ar(out, input);
 }).add;
