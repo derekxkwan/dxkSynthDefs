@@ -229,23 +229,22 @@ SynthDef(\dxkMungerFS, {|bits = 24, downsamp = 1, amp =1, pregain = 1, in = 10, 
 	Out.ar(out, output * amp);
 }).add;
 
-SynthDef(\dxkMungerFLM, {|bits = 24, downsamp = 1, amp =1, pregain = 1, prelag = 0.01, amplag = 0.01, in = 10, lop = 20000, hip = 0, out = 0|
+SynthDef(\dxkMungerFLM, {|bits = 24, downsamp = 1, amp =1, pregain = 1, prelag = 0.01, amplag = 0.01, in = 10, lop = 20000, hip = 0, out = 0, curve = 0, warp = 5|
 	var input, output;
 	input = In.ar(in, 1);
-	input = (input * Lag.kr(pregain,prelag)).tanh;
+	input = (input * VarLag.kr(pregain,prelag, curve, warp)).tanh;
 	output = Decimator.ar(input, SampleRate.ir/downsamp, bits);
 	output = HPF.ar(LPF.ar(output, lop), hip);
-	Out.ar(out, output * Lag.kr(amp, amplag));
+	Out.ar(out, output * VarLag.kr(amp, amplag, curve, warp));
 }).add;
 
-SynthDef(\dxkMungerFLS, {|bits = 24, downsamp = 1, amp =1, pregain = 1, prelag = 0.01, amplag = 0.01, in = 10, lop = 20000, hip = 0, out = 0|
+SynthDef(\dxkMungerFLS, {|bits = 24, downsamp = 1, amp =1, pregain = 1, prelag = 0.01, amplag = 0.01, in = 10, lop = 20000, hip = 0, out = 0, curve = 0, warp = 5|
 	var input, output;
 	input = In.ar(in, 2);
-	input = (input * Lag.kr(pregain,prelag)).tanh;
+	input = (input * VarLag.kr(pregain,prelag, curve, warp)).tanh;
 	output = Decimator.ar(input, SampleRate.ir/downsamp, bits);
 	output = HPF.ar(LPF.ar(output, lop), hip);
-	Out.ar(out, output * Lag.kr(amp, amplag));
+	Out.ar(out, output * VarLag.kr(amp, amplag, curve, warp));
 }).add;
-
 
 

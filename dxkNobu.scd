@@ -18,9 +18,9 @@ SynthDef(\dxkPNobuM, {|buf, gate = 1, loc = 0, rate = 1, amp = 1, pan = 0,  ramp
 	rdphs = Phasor.ar(0, bufrate, startend[0], startend[1], real_loc);
 	env = EnvGen.ar(Env.asr(ramp,1,ramp),gate, doneAction: 2);
 	output = BufRd.ar(1, buf, rdphs);
-	output = output*env*amp;
+	output = output*env;
 	output = Pan2.ar(output, pan);
-	Out.ar(out,output);
+	Out.ar(out,output * amp);
 }).add;
 
 SynthDef(\dxkPNobuS, {|buf, gate = 1, loc = 0,  ramp = 0.001, rate = 1, amp = 1, pan = 0, relabs = 0, out = 0, revadj = 1, dur = 0.25|
@@ -45,9 +45,9 @@ SynthDef(\dxkPNobuS, {|buf, gate = 1, loc = 0,  ramp = 0.001, rate = 1, amp = 1,
 	panner = Clip.kr([ (1 - pan), pan, (1 + pan), (-1 * pan)], 0, 1);
 	panout = [Mix.ar(output * [panner[0], panner[3]]), Mix.ar(output * [panner[1], panner[2]])];
 	
-	output = panout*env*amp;
+	output = panout*env;
 	//output = Pan2.ar(output,pan);
-	Out.ar(out,output);
+	Out.ar(out,output * amp);
 }).add;
 
 
@@ -77,9 +77,9 @@ SynthDef(\dxkPNobuStutM, {|buf, gate = 1, loc = 0, rate = 1, stut = 0,
 	stutenv = EnvGen.ar(Env.asr(stutramp, 1, stutramp), clock);
 	stutout = DelayL.ar(output, maxdelay, delptr);
 	output = XFade2.ar(output, stutout, Lag.kr(stut*2-1, stutramp));
-	output = output*env*amp;
+	output = output*env;
 	output = Pan2.ar(output, pan);
-	Out.ar(out,output);
+	Out.ar(out,output * amp);
 
 }).add;
 
@@ -123,10 +123,10 @@ SynthDef(\dxkPNobuStutS, {|buf, gate = 1, loc = 0, rate = 1, stut = 0,
 
 
 	
-	output = panout*env*amp;
+	output = panout*env;
 
 	//output = Pan2.ar(output, pan);
-	Out.ar(out,output);
+	Out.ar(out,output * amp);
 
 }).add;
 

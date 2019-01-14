@@ -41,17 +41,17 @@ SynthDef(\dxkOutCSS, {|in = 10, out = 0, gain = 1, amp = 1, thresh = 1, slope_be
 
 //
 
-SynthDef(\dxkKrBusSet, {
-	arg bus, val = 0, lag = 0.01;
-	var opt = Lag.kr(val, lag);
-	Out.kr(bus, opt);
-}).add;
-
 SynthDef(\dxkArBusSet, {
-	arg bus, val = 0, lag = 0.01;
-	var opt = Lag.ar(K2A.ar(val), lag);
+	arg bus, val = 0, lag = 0.01, curve = 0, warp = 5;
+	var opt = VarLag.ar(K2A.ar(val), lag, curve, warp);
 	Out.ar(bus, opt);
 }).add;
 
+SynthDef(\dxkKrBusSet, {
+	arg bus, val = 0, lag = 0.01, curve = 0, warp = 5;
+	var opt = VarLag.kr(val, lag, curve, warp);
+	Out.kr(bus, opt);
+}).add;
 
-	
+
+
